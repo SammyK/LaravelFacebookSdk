@@ -1,0 +1,1 @@
+<script src="//connect.facebook.net/{{ Config::get('laravel-facebook-sdk::locale') }}/all.js"></script>
