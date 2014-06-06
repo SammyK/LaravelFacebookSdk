@@ -137,7 +137,7 @@ $event = Event::createOrUpdateFacebookObject($facebook_event);
 
 # Facebook Query Builder
 
-LaravelFacebookSdk is a wrapper for [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder) with the added functionality of [context helpers](#context-helpers) and [model helpers](#model-helpers). Any of the Facebook Query Builder methods are accessible via the `Facebook` facade. For a full list of available methods, consult the [Facebook Query Builder documentation](https://github.com/SammyK/FacebookQueryBuilder).
+LaravelFacebookSdk is a wrapper for [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder). Any of the Facebook Query Builder methods are accessible via the `Facebook` facade. For a full list of available methods, consult the [Facebook Query Builder documentation](https://github.com/SammyK/FacebookQueryBuilder).
 
 ``` php
 // This is done for you automatically with the config you provide,
