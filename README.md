@@ -54,17 +54,6 @@ In your app config, add the `LaravelFacebookSdkServiceProvider` to the providers
 ```
 
 
-## Configuration File
-
-After [creating an app in Facebook](https://developers.facebook.com/apps), you'll need to provide the app ID and secret. First publish the configuration file.
-
-```bash
-$ php artisan config:publish sammyk/laravel-facebook-sdk
-```
-
-Then you can update the `app_id` and `app_secret` values in the `app/config/packages/sammyk/laravel-facebook-sdk/config.php` file.
-
-
 ## Facade (optional)
 
 If you want to make use of the facade, add it to the aliases array in your app config.
@@ -74,6 +63,17 @@ If you want to make use of the facade, add it to the aliases array in your app c
     'Facebook' => 'SammyK\LaravelFacebookSdk\FacebookFacade',
     ];
 ```
+
+
+## Configuration File
+
+After [creating an app in Facebook](https://developers.facebook.com/apps), you'll need to provide the app ID and secret. First publish the configuration file.
+
+```bash
+$ php artisan config:publish sammyk/laravel-facebook-sdk
+```
+
+Then you can update the `app_id` and `app_secret` values in the `app/config/packages/sammyk/laravel-facebook-sdk/config.php` file.
 
 
 ## Migration (optional)
@@ -140,10 +140,13 @@ $event = Event::createOrUpdateFacebookObject($facebook_event);
 LaravelFacebookSdk is a wrapper for [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder) with the added functionality of [context helpers](#context-helpers) and [model helpers](#model-helpers). Any of the Facebook Query Builder methods are accessible via the `Facebook` facade. For a full list of available methods, consult the [Facebook Query Builder documentation](https://github.com/SammyK/FacebookQueryBuilder).
 
 ``` php
+// This is done for you automatically with the config you provide,
+// but you can overwrite it here if you're working with multiple apps.
 Facebook::setAppCredentials('your_app_id', 'your_app_secret');
 
 // . . .
 
+// This access token will be used for all calls to Graph.
 Facebook::setAccessToken('access_token');
 
 // . . .
