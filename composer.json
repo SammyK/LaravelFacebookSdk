@@ -17,7 +17,7 @@
         "illuminate/support": "~4",
         "illuminate/config": "~4",
         "illuminate/session": "~4",
-        "sammyk/facebook-query-builder": ">=1.0.7",
+        "sammyk/facebook-query-builder": "~1.0",
         "nesbot/Carbon": "*"
     },
     "require-dev": {
