@@ -31,7 +31,7 @@ Add the Laravel Facebook Sdk package to your `composer.json` file.
 ```json
 {
     "require": {
-        "sammyk/laravel-facebook-sdk": "1.0.*"
+        "sammyk/laravel-facebook-sdk": "~1.1"
     }
 }
 ```
@@ -39,7 +39,7 @@ Add the Laravel Facebook Sdk package to your `composer.json` file.
 Or via the command line in the root of your Laravel installation.
 
 ```bash
-$ composer require "sammyk/laravel-facebook-sdk:1.0.*"
+$ composer require "sammyk/laravel-facebook-sdk:~1.1"
 ```
 
 
