@@ -1,11 +1,11 @@
 # Laravel Facebook SDK
 
 [![Build Status](http://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
-[![Latest Stable Version](http://img.shields.io/packagist/v/sammyk/laravel-facebook-sdk.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![Latest Stable Version](http://img.shields.io/badge/Latest%20Stable-1.1.1-blue.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the Facebook SDK v4 into Laravel 4 which also harnesses the power of [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder).
+A fully unit-tested package for easily integrating the [Facebook SDK v4.0](https://github.com/facebook/facebook-php-sdk-v4/tree/4.0-dev) into Laravel 4 which also harnesses the power of [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder).
 
 - [Installation](#installation)
 - [Facebook Query Builder](#facebook-query-builder)

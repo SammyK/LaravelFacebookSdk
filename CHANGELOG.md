@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.1.1 - December 11, 2014
+
+- Updated branching model in preparation of upgrade to Facebook PHP SDK v4.1.
+
+
 ## 1.1.0 - July 16, 2014
 
 - Adjusted tagging to work according to [semver](http://semver.org/).
