@@ -1,37 +1,35 @@
 # Laravel Facebook SDK
 
 [![Build Status](http://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
-[![Latest Stable Version](http://img.shields.io/badge/Latest%20Stable-1.1.1-blue.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![Latest Stable Version](http://img.shields.io/badge/Development%20Version-2.0.0-orange.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the [Facebook SDK v4.0](https://github.com/facebook/facebook-php-sdk-v4/tree/4.0-dev) into Laravel 4 which also harnesses the power of [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder).
+A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https://github.com/facebook/facebook-php-sdk-v4) into Laravel 4.
 
 - [Installation](#installation)
-- [Facebook Query Builder](#facebook-query-builder)
-    - [Obtaining a login URL](#obtaining-a-login-url)
-    - [Obtaining an AccessToken object](#obtaining-an-accesstoken-object)
-- [Examples](#examples)
-    - [User Authentication Example](#user-authentication-example)
-- [Extensibility](#extensibility)
+- [Facebook Login](#facebook-login)
+- [Saving Data From Facebook In The Database](#saving-data-from-facebook-in-the-database)
+- [Logging The User Into Laravel](#logging-the-user-into-laravel)
 - [Error Handling](#error-handling)
+- [Examples](#examples)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Credits](#credits)
 - [License](#license)
 
 
-# Installation
+## Installation
 
 
-## Composer
+### Composer
 
-Add the Laravel Facebook Sdk package to your `composer.json` file.
+Add the Laravel Facebook SDK package to your `composer.json` file.
 
 ```json
 {
     "require": {
-        "sammyk/laravel-facebook-sdk": "~1.1"
+        "sammyk/laravel-facebook-sdk": "~2.0"
     }
 }
 ```
@@ -39,11 +37,11 @@ Add the Laravel Facebook Sdk package to your `composer.json` file.
 Or via the command line in the root of your Laravel installation.
 
 ```bash
-$ composer require "sammyk/laravel-facebook-sdk:~1.1"
+$ composer require "sammyk/laravel-facebook-sdk:~2.0"
 ```
 
 
-## Service Provider
+### Service Provider
 
 In your app config, add the `LaravelFacebookSdkServiceProvider` to the providers array.
 
@@ -54,7 +52,7 @@ In your app config, add the `LaravelFacebookSdkServiceProvider` to the providers
 ```
 
 
-## Facade (optional)
+### Facade (optional)
 
 If you want to make use of the facade, add it to the aliases array in your app config.
 
@@ -65,7 +63,16 @@ If you want to make use of the facade, add it to the aliases array in your app c
 ```
 
 
-## Configuration File
+### IoC container
+
+The main class is bound in the IoC container as `laravel-facebook-sdk`.
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+```
+
+
+### Configuration File
 
 After [creating an app in Facebook](https://developers.facebook.com/apps), you'll need to provide the app ID and secret. First publish the configuration file.
 
@@ -76,36 +83,190 @@ $ php artisan config:publish sammyk/laravel-facebook-sdk
 Then you can update the `app_id` and `app_secret` values in the `app/config/packages/sammyk/laravel-facebook-sdk/config.php` file.
 
 
-## Migration (optional)
+## Facebook Login
 
-If you plan on integrating Facebook user authentication with your existing `User` model, you'll need to add some fields to your user table. LaravelFacebookSdk makes this a painless process with an artisan command to create a migration.
+When we say "log in with Facebook", we really mean "obtain a user access token to make calls to the Graph API on behalf of the user." There are a number of ways to log a user in with Facebook using what the Facbeook PHP SDK calls "[helpers](https://developers.facebook.com/docs/php/reference#helpers)".
 
-> **Note:** Make sure to change `users` to the name of your user table.
+The four supported login methods are:
 
-```bash
-$ php artisan laravel-facebook-sdk:table users
-$ php artisan migrate
-```
+1. [Login From Redirect](#login-from-redirect)
+2. [Login From JavaScript](#login-from-javascript)
+3. [Login From App Canvas](#login-from-app-canvas)
+4. [Login From Page Tab](#login-from-page-tab)
 
-If you're using the Eloquent ORM, make sure to hide the `access_token` field from possible exposure in your `User` model.
 
-Also add the `FacebookableTrait` to your model to get some really great functionality for syncing Facebook data with your `User` model.
+### Login From Redirect
+
+One of the most common ways to log a user into your app is by using a redirect URL.
+
+The idea is that you generate a unique URL that the user clicks on. Once the user clicks the link they will be redirected to Facebook asking them to grant any permissions your app is requesting. Once the user responds, Facebook will redirect the user back to a callback URL that you specify with either a successful response or an error response.
+
+The redirect helper can be obtained using the SDK's `getRedirectLoginHelper()` method.
+
+
+#### Generating a login URL
+
+You can get a login URL just like you you do with the Facebook PHP SDK v4.1.
 
 ```php
-use SammyK\LaravelFacebookSdk\FacebookableTrait;
+$fb = App::make('laravel-facebook-sdk');
 
-class User extends Eloquent implements UserInterface
+$login_link = $fb->getRedirectLoginHelper()->getLoginUrl('http://my-callback/url', ['email', 'user_events']);
+
+echo '<a href="' . $login_link . '">Log in with Facebook</a>';
+```
+
+But if you set the `default_redirect_uri` callback URL in the config file, you can use the `getLoginUrl()` wrapper method which will default the callback URL (`default_redirect_uri`) and permission scope (`default_scope`) to whatever you set in the config file.
+
+```php
+$login_link = $fb->getLoginUrl();
+```
+
+Alternatively you can pass the permissions and a custom callback URL to the wrapper to overwrite the default config.
+
+> **Note:** Since the list of permissions sometimes changes but the callback URL usually stays the same, the permissions array is the first argument in the `getLoginUrl()` wrapper method which is the reverse of the SDK's method `getRedirectLoginHelper()->getLoginUrl($url, $permissions)`.
+
+```php
+$login_link = $fb->getLoginUrl(['email', 'user_status'], 'http://my-custom-callback/url');
+// Or, if you want to default to the callback URL set in the config
+$login_link = $fb->getLoginUrl(['email', 'user_status']);
+```
+
+
+#### Obtaining an access token from a callback URL
+
+After the user has clicked on the login link from above and confirmed or denied the app permission requests, they will be redirected to the specified callback URL.
+
+The standard "SDK" way to obtain an access token on the callback URL is as follows:
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+
+try
 {
-    use FacebookableTrait;
-
-    protected $hidden = ['access_token'];
+    $token = $fb->getRedirectLoginHelper()->getAccessToken('http://my-custom-callback/url');
+}
+catch (\Facebook\Exceptions\FacebookSDKException $e)
+{
+    // Failed to obtain access token
+    echo 'Error:' . $e->getMessage();
 }
 ```
 
-Check out the migration file that it generated. If you plan on using the Facebook user ID as the primary key, make sure you have a column called `id` that is a big int and indexed. If you are storing the Facebook ID in a different field, make sure that field exists in the database and make sure to [map to it in your model](#field-mapping).
+There is a wrapper method for `getRedirectLoginHelper()->getAccessToken($callback_url)` in LaravelFacebookSdk called `getAccessTokenFromRedirect()` that defaults the callback URL to whatever is set in the config under `default_redirect_uri`.
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+
+try
+{
+    $token = $fb->getAccessTokenFromRedirect();
+}
+catch (\Facebook\Exceptions\FacebookSDKException $e)
+{
+    // Failed to obtain access token
+    echo 'Error:' . $e->getMessage();
+}
+```
 
 
-### Field mapping
+### Login From JavaScript
+
+If you're using the [JavaScript SDK](https://developers.facebook.com/docs/javascript), you can obtain an access token from the cookie set by the JavaScript SDK.
+
+By default the JavaScript SDK will not set a cookie, so you have to explicitly enable it with `cookie: true` when you `init()` the SDK.
+
+```javascript
+FB.init({
+  appId      : 'your-app-id',
+  cookie     : true,
+  version    : 'v2.2'
+});
+```
+
+After you have logged a user in with the JavaScript SDK using [`FB.login()`](https://developers.facebook.com/docs/reference/javascript/FB.login), the user access token that sits in a cookie can be obtained with the PHP SDK's JavaScript helper.
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+
+try
+{
+    $token = $fb->getJavaScriptHelper()->getAccessToken();
+}
+catch (\Facebook\Exceptions\FacebookSDKException $e)
+{
+    // Failed to obtain access token
+    echo 'Error:' . $e->getMessage();
+}
+```
+
+
+### Login From App Canvas
+
+If your app lives within the context of a Facebook app canvas, you can obtain an access token from the signed request that is `POST`'ed to your app on the first page load.
+
+> **Note:** The canvas helper only obtains an existing access token from the signed request data received from Facebook. If the user visiting your app has not authorized your app yet or their access token has expired, the `getAccessToken()` method will return `null`. In that case you'll need to log the user in with either [a redirect](#login-from-redirect) or [JavaScript](#login-from-javascript).
+
+Use the SDK's canvas helper to obtain the access token from the signed request data.
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+
+try
+{
+    $token = $fb->getCanvasHelper()->getAccessToken();
+}
+catch (\Facebook\Exceptions\FacebookSDKException $e)
+{
+    // Failed to obtain access token
+    echo 'Error:' . $e->getMessage();
+}
+```
+
+
+### Login From Page Tab
+
+If your app lives within the context of a Facebook Page tab, that is the same as an app canvas and the "Login From App Canvas" method will also work to obtain an access token. But a Page tab also has additional data in the signed request.
+
+The SDK provides a Page tab helper to obtain an access token from the signed request data within the context of a Page tab.
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+
+try
+{
+    $token = $fb->getPageTabHelper()->getAccessToken();
+}
+catch (\Facebook\Exceptions\FacebookSDKException $e)
+{
+    // Failed to obtain access token
+    echo 'Error:' . $e->getMessage();
+}
+```
+
+
+## Saving Data From Facebook In The Database
+
+Saving data received from the Graph API to a database can sometimes be a tedious endeavor. Since the Graph API returns data in a predictable format, the `FacebookableTrait` can make saving the data to a database a painless process.
+
+Any Eloquent model that implements the `FacebookableTrait` will have the `createOrUpdateFacebookObject()` method applied to it. This method really makes it easy to take data that was returned directly from Facebook and create or update it in the local database.
+
+For example if you have an Eloquent model named `Event`, here's how you might grab a specific event from the Graph API and insert it into the database as a new entry or update an existing entry with the new info.
+
+```php
+$fb = App::make('laravel-facebook-sdk');
+
+$response = $fb->get('/some-event-id?fields=id,name');
+$facebook_event = $response->getGraphObject();
+
+// Create the event if not exists or update existing
+$event = Event::createOrUpdateFacebookObject($facebook_event);
+```
+
+The `createOrUpdateFacebookObject()` will automatically map the returned field names to the column names in your database. If, for example, your column names on the `events` table don't match the field names for an [Event](https://developers.facebook.com/docs/graph-api/reference/event) node, you can [map the fields](#field-mapping).
+
+
+### Field Mapping
 
 Since the names of the fields in your database might not match the names of the fields in Graph, you can map the field names in your `User` model using the `$facebook_field_aliases` static variable.
 
@@ -123,111 +284,108 @@ class User extends Eloquent implements UserInterface
 ```
 
 
-### Saving Data From Facebook
+## Logging The User Into Laravel
 
-Any model that implements the `FacebookableTrait` will have the `createOrUpdateFacebookObject()` method applied to it. This method really makes it easy to take data that was returned directly from Facebook and create or update it in the local database.
+The Laravel Facebook SDK makes it easy to log a user in with Laravel's built-in authentication driver.
+
+
+### Updating The Users Table
+
+You'll need to make columns in your `users` table to store the user's Facebook id and access token.
+
+You could add these column manually, or just use the built-in migration script.
+
+> **Note:** Make sure to change `users` to the name of your user table.
+
+```bash
+$ php artisan laravel-facebook-sdk:table users
+$ php artisan migrate
+```
+
+Check out the migration file that it generated. If you plan on using the Facebook user ID as the primary key, make sure you have a column called `id` that is an unsigned big integer and indexed. If you are storing the Facebook ID in a different field, make sure that field exists in the database and make sure to [map to it in your model](#field-mapping) to your custom id name.
+
+If you're using the Eloquent ORM, make sure to hide the `access_token` field from possible exposure in your `User` model.
+
+Also add the [`FacebookableTrait`](#saving-data-from-facebook-in-the-database) to your `User` model to get some really great functionality for syncing your model with data returned from the Graph API.
 
 ```php
-$facebook_event = Facebook::object('some-event-id')->fields('id', 'name')->get();
+use SammyK\LaravelFacebookSdk\FacebookableTrait;
 
-// Create the event if not exists or update existing
-$event = Event::createOrUpdateFacebookObject($facebook_event);
+class User extends Eloquent implements UserInterface
+{
+    use FacebookableTrait;
+
+    protected $hidden = ['access_token'];
+}
 ```
 
 
-# Facebook Query Builder
+### Logging the user into Laravel
 
-LaravelFacebookSdk is a wrapper for [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder). Any of the Facebook Query Builder methods are accessible via the `Facebook` facade. For a full list of available methods, consult the [Facebook Query Builder documentation](https://github.com/SammyK/FacebookQueryBuilder).
-
-``` php
-// This is done for you automatically with the config you provide,
-// but you can overwrite it here if you're working with multiple apps.
-Facebook::setAppCredentials('your_app_id', 'your_app_secret');
-
-// . . .
-
-// This access token will be used for all calls to Graph.
-Facebook::setAccessToken('access_token');
-
-// . . .
-
-// Get the logged in user's profile.
-$user = Facebook::object('me')->fields('id', 'email')->get();
-
-// . . .
-
-// Get latest 5 photos of user and their name.
-$photos = Facebook::edge('photos')->fields('id', 'source')->limit(5);
-$user = Facebook::object('me')->fields('name', $photos)->get();
-
-// . . .
-
-// Post a status update.
-$status_update = ['message' => 'My witty status update.'];
-$response = Facebook::object('me/feed')->with($status_update)->post();
-
-$status_update_id = $response['id'];
-
-// Comment on said status update.
-$comment = ['message' => 'My witty comment on your status update.'];
-$response = Facebook::object($status_update_id . '/comments')->with($comment)->post();
-
-// Delete the status update.
-$response = Facebook::object($status_update_id)->delete();
-```
-
-
-## Obtaining a login URL
-
-You can get a login URL just like you can in Facebook Query Builder.
+After the user has logged in with Facebook and you've obtained the user ID from the Graph API, you can log the user into Laravel by passing the logged in user's `User` model to the `Auth::login()` method.
 
 ```php
-$login_link = Facebook::auth()->getLoginUrl('http://my-callback/url');
-```
+$fb = App::make('laravel-facebook-sdk');
 
-But if your callback URL is already set in the config file, you can use the wrapper which will default the callback and permission scope to whatever you set in the config file.
-
-```php
-$login_link = Facebook::getLoginUrl();
-```
-
-Alternatively you can pass the permissions and a custom callback to the wrapper to overwrite the default config.
-
-```php
-$login_link = Facebook::getLoginUrl(['email', 'user_status'], 'http://my-custom-callback/url');
-```
-
-
-## Obtaining an AccessToken object
-
-Just like `getLoginUrl()`, there is a wrapper for `getTokenFromRedirect()` that defaults the callback URL to whatever is set in the config.
-
-```php
 try
 {
-    $token = Facebook::getTokenFromRedirect();
+    $response = $fb->get('/me?fields=id,name');
 }
-catch (FacebookQueryBuilderException $e)
+catch (\Facebook\Exceptions\FacebookSDKException $e)
 {
-    // Failed to obtain access token
-    echo 'Error:' . $e->getMessage();
+    echo 'Error: ' . $e->getMessage();
+    exit;
+}
+
+// Convert the response to a `Facebook/GraphNodes/GraphUser` collection
+$facebook_user = $response->getGraphUser();
+
+// Create the user if it does not exist or update the existing entry.
+// This will only work if you've added the FacebookableTrait to your User model.
+$user = User::createOrUpdateFacebookObject($facebook_user);
+
+// Log the user into Laravel
+Auth::login($user);
+```
+
+
+## Error Handling
+
+The Facebook PHP SDK throws `\Facebook\Exceptions\FacebookSDKException` exceptions. Whenever there is an error response from Graph, the SDK will throw a `\Facebook\Exceptions\FacebookResponseException` which extends from `\Facebook\Exceptions\FacebookSDKException`. If a `\Facebook\Exceptions\FacebookResponseException` is thrown there are a number of "horizontal" exceptions that can be obtained using `$e->getPrevious()`.
+
+```php
+try {
+    // Stuffs here
+} catch (\Facebook\Exceptions\FacebookResponseException $e) {
+    $graphError = $e->getPrevious();
+    echo 'Graph API Error: ' . $e->getMessage();
+    echo ', Graph error code: ' . $graphError->getCode();
+    exit;
+} catch (\Facebook\Exceptions\FacebookSDKException $e) {
+    echo 'SDK Error: ' . $e->getMessage();
+    exit;
 }
 ```
 
-See the [documentation](https://github.com/SammyK/FacebookQueryBuilder#obtaining-an-access-token) for all the ways to obtain an AccessToken object.
+The LaravelFacebookSdk does not throw any custom exceptions.
 
 
-# Examples
+## Examples
 
-## User Authentication Example
+### User Login From Redirect Example
 
-Here's how you might log a user into your site, get a long-lived access token and save the user to your `users` table if they don't already exist then log them in.
+Here's a full example of how you might log a user into your app using the [redirect method](#login-from-redirect).
+
+This example also demonstrates how to [exchange a short-lived access token with a long-lived access token](https://www.sammyk.me/access-token-handling-best-practices-in-facebook-php-sdk-v4) and save the user to your `users` table if the entry doesn't exist.
+
+Finally it will log the user in using Laravel's built-in user authentication.
 
 ``` php
-// Fancy wrapper for login URL
+// Generate a login URL
 Route::get('/login', function()
 {
-    return Redirect::to(Facebook::getLoginUrl());
+    $login_url = Facebook::getLoginUrl(['email']);
+    echo '<a href="' . $login_url . '">Login with Facebook</a>';
 });
 
 // Endpoint that is redirected to after an authentication attempt
@@ -238,16 +396,16 @@ Route::get('/facebook/login', function()
      */
     try
     {
-        $token = Facebook::getTokenFromRedirect();
+        $token = Facebook::getAccessTokenFromRedirect();
 
         if ( ! $token)
         {
-            return Redirect::to('/')->with('error', 'Unable to obtain access token.');
+            dd('Unable to obtain access token.', $token);
         }
     }
-    catch (FacebookQueryBuilderException $e)
+    catch (\Facebook\Exceptions\FacebookSDKException $e)
     {
-        return Redirect::to('/')->with('error', $e->getPrevious()->getMessage());
+        dd($e->getMessage());
     }
 
     if ( ! $token->isLongLived())
@@ -257,88 +415,66 @@ Route::get('/facebook/login', function()
          */
         try
         {
-            $token = $token->extend();
+            // @TODO This is changing
+            $fbApp = Facebook::getApp();
+            $fbClient = Facebook::getClient();
+            $token = $token->extend($fbApp, $fbClient);
         }
-        catch (FacebookQueryBuilderException $e)
+        catch (\Facebook\Exceptions\FacebookSDKException $e)
         {
-            return Redirect::to('/')->with('error', $e->getPrevious()->getMessage());
+            dd($e->getMessage());
         }
     }
 
-    Facebook::setAccessToken($token);
+    Facebook::setDefaultAccessToken($token);
 
     /**
      * Get basic info on the user from Facebook.
      */
     try
     {
-        $facebook_user = Facebook::object('me')->fields('id','name')->get();
+        $response = Facebook::get('/me?fields=id,name');
     }
-    catch (FacebookQueryBuilderException $e)
+    catch (\Facebook\Exceptions\FacebookSDKException $e)
     {
-        return Redirect::to('/')->with('error', $e->getPrevious()->getMessage());
+        dd($e->getMessage());
     }
 
-    // Create the user if not exists or update existing
+    // Convert the response to a `Facebook/GraphNodes/GraphUser` collection
+    $facebook_user = $response->getGraphUser();
+    
+    // Create the user if it does not exist or update the existing entry.
+    // This will only work if you've added the FacebookableTrait to your User model.
     $user = User::createOrUpdateFacebookObject($facebook_user);
 
     // Log the user into Laravel
-    Facebook::auth()->login($user);
+    Auth::login($user);
 
     return Redirect::to('/')->with('message', 'Successfully logged in with Facebook');
 });
 ```
 
 
-# Extensibility
+## Testing
 
-You can add extensibility is by registering a closure.
-
-``` php
-Facebook::extend('getUserEventsAndPhotos', function($facebook)
-{
-    $events = $facebook->edge('events')->fields('id', 'name')->limit(10);
-    $photos = $facebook->edge('photos')->fields('id', 'source')->limit(10);
-    return $facebook->object('me')->fields('id', 'name', $events, $photos)->get();
-});
-```
-
-Then you can call `getUserEventsAndPhotos()` from the Facade.
-
-``` php
-$users_events_and_photos = Facebook::getUserEventsAndPhotos()
-```
-
-
-# Error Handling
-
-There are three types of exceptions that can be thrown.
-
-1. In most cases a `\SammyK\FacebookQueryBuilder\FacebookQueryBuilderException` will be thrown from the Facebook Query Builder. Those exceptions are not caught from within this package so that you can handle them directly. These are usually thrown if Graph returns an error or there was an issue communicating with Graph.
-2. A `LaravelFacebookSdkException` will be thrown if there was an error adding extensibility or if there was a problem validating data on an Eloquent model.
-3. In uncommon scenarios you might have a `\Facebook\FacebookSDKException` thrown at you. This is an exception that the base [Facebook PHP SDK v4](https://github.com/facebook/facebook-php-sdk-v4) throws. Most of these are caught & rethrown under the `\SammyK\FacebookQueryBuilder\FacebookQueryBuilderException`, but some of them might sneak through.
-
-
-# Testing
-
-To get the tests to pass, you'll need to run `phpunit` from within the root of your Laravel installation and point it to the LaravelFacebookSdk installation in the `vendor` directory.
+The tests are written with `phpunit`. If you've installed `phpunit` globally, you can run the tests from the project directory.
 
 ``` bash
-$ cd /path/to/laravel-installation 
-$ phpunit vendor/sammyk/laravel-facebook-sdk
+$ cd /path/to/sammyk/laravel-facebook-sdk
+$ phpunit
 ```
 
 
-# Contributing
+## Contributing
 
 Please see [CONTRIBUTING](https://github.com/SammyK/LaravelFacebookSdk/blob/master/CONTRIBUTING.md) for details.
 
 
-# Credits
+## Credits
 
 This package is maintained by [Sammy Kaye Powers](https://github.com/SammyK). See a [full list of contributors](https://github.com/SammyK/LaravelFacebookSdk/contributors).
 
 
-# License
+## License
 
 The MIT License (MIT). Please see [License File](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE) for more information.

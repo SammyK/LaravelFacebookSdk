@@ -2,6 +2,26 @@
 
 use SammyK\LaravelFacebookSdk\FacebookableTrait;
 
+class FakeModel extends \Illuminate\Database\Eloquent\Model
+{
+    public static function firstByAttributes(array $data)
+    {
+        if( $data['facebook_id'] !== '1' )
+        {
+            return null;
+        }
+        $obj = new static();
+        $obj->faz = 'Baz';
+        $obj->email = 'me@me.com';
+        return $obj;
+    }
+
+    public function save()
+    {
+        return true;
+    }
+}
+
 class MyEmptyModel extends FakeModel
 {
     use FacebookableTrait;
@@ -17,26 +37,6 @@ class MyUserModel extends FakeModel
         'id' => 'facebook_id',
         'foo' => 'faz',
         ];
-}
-
-class FakeModel
-{
-    public static function firstByAttributes(array $data)
-    {
-        if( $data['facebook_id'] !== '1' )
-        {
-            return null;
-        }
-        $obj = new FakeModel();
-        $obj->faz = 'Baz';
-        $obj->email = 'me@me.com';
-        return $obj;
-    }
-
-    public function save()
-    {
-        return true;
-    }
 }
 
 class FacebookableTraitTest extends PHPUnit_Framework_TestCase
@@ -100,7 +100,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
                 'facebook_id' => '1234567890',
             ]);
 
-        $this->assertObjectNotHasAttribute('faz', $my_object);
+        $this->assertNull($my_object->faz);
     }
 
     public function testFirstOrNewFacebookObjectReturnsExistingObject()
@@ -110,7 +110,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
                 'facebook_id' => '1',
             ]);
 
-        $this->assertObjectHasAttribute('faz', $my_object);
+        $this->assertEquals('Baz', $my_object->faz);
     }
 
     public function testInsertsNewFacebookObjectDataIntoDatabase()

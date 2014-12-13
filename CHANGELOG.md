@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 2.0.0 - TBD
+
+- Upgraded to use the latest Facebook PHP SDK v4.1.
+
+
 ## 1.1.1 - December 11, 2014
 
 - Updated branching model in preparation of upgrade to Facebook PHP SDK v4.1.

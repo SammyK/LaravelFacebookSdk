@@ -1,9 +1,11 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
-use SammyK\FacebookQueryBuilder\GraphObject;
+use Illuminate\Database\Eloquent\Model;
+use Facebook\GraphNodes\GraphObject;
 
 trait FacebookableTrait
 {
+
     /*
      * List of Facebook field names and their corresponding
      * column names as they exist in the local database.
@@ -14,12 +16,15 @@ trait FacebookableTrait
     /**
      * Convert a Facebook field to a database column name
      *
-     * @param string
+     * @param string $field
+     *
      * @return string
      */
     public static function fieldToColumnName($field)
     {
-        if (isset(static::$facebook_field_aliases[$field]))
+        $model_name = get_class(new static());
+        if (property_exists($model_name, 'facebook_field_aliases')
+            && isset(static::$facebook_field_aliases[$field]))
         {
             return static::$facebook_field_aliases[$field];
         }
@@ -39,10 +44,10 @@ trait FacebookableTrait
     /**
      * Map Facebook-named data to local database-named data
      *
-     * @param \Illuminate\Database\Eloquent\Model
-     * @param array
+     * @param Model $object
+     * @param array $fields
      */
-    public static function mapFacebookFieldsToObject($object, array $fields)
+    public static function mapFacebookFieldsToObject(Model $object, array $fields)
     {
         foreach ($fields as $field => $value)
         {
@@ -53,22 +58,22 @@ trait FacebookableTrait
     /**
      * Inserts or updates the Facebook object to the local database
      *
-     * @param array|\SammyK\FacebookQueryBuilder\GraphObject
+     * @param array|GraphObject $data
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      *
-     * @throws LaravelFacebookSdkException
+     * @throws \InvalidArgumentException
      */
     public static function createOrUpdateFacebookObject($data)
     {
         if ($data instanceof GraphObject)
         {
-            $data = $data->toArray();
+            $data = $data->asArray();
         }
 
         if ( ! isset($data['id']))
         {
-            throw new LaravelFacebookSdkException('Facebook object id is missing');
+            throw new \InvalidArgumentException('Facebook object id is missing');
         }
 
         $attributes = [static::getFacebookObjectKeyName() => $data['id']];
@@ -86,7 +91,8 @@ trait FacebookableTrait
      * Like static::firstOrNew() but without mass assignment
      *
      * @param array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
+     *
+     * @return Model
      */
     public static function firstOrNewFacebookObject(array $attributes)
     {
@@ -97,4 +103,5 @@ trait FacebookableTrait
 
         return $facebook_object;
     }
+
 }

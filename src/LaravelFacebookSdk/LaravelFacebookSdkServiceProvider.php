@@ -1,10 +1,10 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
 use Illuminate\Support\ServiceProvider;
-use SammyK\FacebookQueryBuilder\FQB;
 
 class LaravelFacebookSdkServiceProvider extends ServiceProvider
 {
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -31,30 +31,24 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Facebook Query Builder
-        $this->app->bindShared('facebook-query-builder', function($app)
-        {
-            FQB::setAppCredentials($app['config']->get('laravel-facebook-sdk::app_id'), $app['config']->get('laravel-facebook-sdk::app_secret'));
-            FQB::setRedirectHelperAlias('\SammyK\LaravelFacebookSdk\LaravelFacebookRedirectLoginHelper');
-            return new FQB();
-        });
-
         // Main Service
         $this->app->bindShared('laravel-facebook-sdk', function($app)
         {
-            $facebook = new LaravelFacebookSdk($app['facebook-query-builder'], $app['config']);
-
-            $facebook->setAuthDriver(new LaravelAuthFacebook($this->app['auth']->driver()));
-
-            return $facebook;
+            return new LaravelFacebookSdk($app['config'], [
+                'app_id' => $app['config']->get('laravel-facebook-sdk::app_id'),
+                'app_secret' => $app['config']->get('laravel-facebook-sdk::app_secret'),
+                'persistent_data_handler' => new LaravelPersistentDataHandler(),
+                'url_detection_handler' => new LaravelUrlDetectionHandler(),
+            ]);
         });
 
         // CLI
         $this->app->bindShared('command.laravel-facebook-sdk.table', function()
         {
-            return new LaravelFacebookSdkTableCommand;
+            return new LaravelFacebookSdkTableCommand();
         });
 
         $this->commands('command.laravel-facebook-sdk.table');
     }
+
 }

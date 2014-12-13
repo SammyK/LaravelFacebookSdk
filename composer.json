@@ -14,11 +14,12 @@
     ],
     "require": {
         "php": ">=5.4.0",
+        "illuminate/auth": "~4",
+        "illuminate/database": "~4",
         "illuminate/support": "~4",
         "illuminate/config": "~4",
         "illuminate/session": "~4",
-        "sammyk/facebook-query-builder": "~1.1",
-        "nesbot/Carbon": "*"
+        "facebook/php-sdk-v4": "~4.1.0@dev"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev"

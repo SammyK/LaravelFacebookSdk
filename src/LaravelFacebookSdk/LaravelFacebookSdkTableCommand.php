@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class LaravelFacebookSdkTableCommand extends Command
 {
+
     /**
      * The console command name.
      *
@@ -73,4 +74,5 @@ class LaravelFacebookSdkTableCommand extends Command
             array('table', InputArgument::REQUIRED, 'The name of your users table.'),
         );
     }
+
 }
