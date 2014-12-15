@@ -51,7 +51,7 @@ class LaravelFacebookSdk extends Facebook
      * Get an access token from a redirect.
      *
      * @param string $callback_url
-     * @return \Facebook\Entities\AccessToken|null
+     * @return \Facebook\AccessToken|null
      */
     public function getAccessTokenFromRedirect($callback_url = '')
     {
