@@ -144,7 +144,8 @@ $fb = App::make('laravel-facebook-sdk');
 
 try
 {
-    $token = $fb->getRedirectLoginHelper()->getAccessToken('http://my-custom-callback/url');
+    $fbClient = Facebook::getClient();
+    $token = $fb->getRedirectLoginHelper()->getAccessToken($fbClient, 'http://my-custom-callback/url');
 }
 catch (\Facebook\Exceptions\FacebookSDKException $e)
 {
