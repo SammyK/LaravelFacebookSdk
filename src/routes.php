@@ -1,6 +1,8 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
 
 Route::get(Config::get('laravel-facebook-sdk::channel_endpoint'), function()
 {
