@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 1.1.2 - January 21, 2015
+
+- Explicit imports of facades in routes.
+
+
 ## 1.1.1 - December 11, 2014
 
 - Updated branching model in preparation of upgrade to Facebook PHP SDK v4.1.
