@@ -246,6 +246,24 @@ catch (\Facebook\Exceptions\FacebookSDKException $e)
 ```
 
 
+## Saving the Access Token
+
+In most cases you won't need to save the access token to a database unless you plan on making requests to the Graph API on behalf of the user when they are not browsing your app (like a 3AM CRON job for example).
+
+After you obtain an access token, you can store it in a session to be used for subsequent requests.
+
+```php
+Session::put('facebook_access_token', (string) $token);
+```
+
+Then in each script that makes calls to the Graph API you can pull the token out of the session and set it as the default.
+
+```php
+$token = Session::get('facebook_access_token');
+$fb->setDefaultAccessToken($token);
+```
+
+
 ## Saving Data From Facebook In The Database
 
 Saving data received from the Graph API to a database can sometimes be a tedious endeavor. Since the Graph API returns data in a predictable format, the `FacebookableTrait` can make saving the data to a database a painless process.
