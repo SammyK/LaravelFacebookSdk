@@ -306,7 +306,7 @@ Facebook::extend('getUserEventsAndPhotos', function($facebook)
 Then you can call `getUserEventsAndPhotos()` from the Facade.
 
 ``` php
-$users_events_and_photos = Facebook::getUserEventsAndPhotos()
+$users_events_and_photos = Facebook::getUserEventsAndPhotos();
 ```
 
 
