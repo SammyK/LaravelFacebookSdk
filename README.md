@@ -202,6 +202,8 @@ $login_link = Facebook::getLoginUrl(['email', 'user_status'], 'http://my-custom-
 
 Just like `getLoginUrl()`, there is a wrapper for `getTokenFromRedirect()` that defaults the callback URL to whatever is set in the config.
 
+**Note:** always remove the trailing slash from your Application URL in the app/config/app.php file
+
 ```php
 try
 {
@@ -215,7 +217,6 @@ catch (FacebookQueryBuilderException $e)
 ```
 
 See the [documentation](https://github.com/SammyK/FacebookQueryBuilder#obtaining-an-access-token) for all the ways to obtain an AccessToken object.
-
 
 ### Saving the Access Token
 
