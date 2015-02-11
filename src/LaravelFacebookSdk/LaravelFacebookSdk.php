@@ -122,7 +122,7 @@ class LaravelFacebookSdk
 
         if ( empty($callback_url))
         {
-            $callback_url = $this->config->get('app.url') . $this->config->get('laravel-facebook-sdk::default_redirect_uri');
+            $callback_url = url($this->config->get('laravel-facebook-sdk::default_redirect_uri'));
         }
 
         return $this->fqb->auth()->getLoginUrl($callback_url, $scope);
@@ -138,7 +138,7 @@ class LaravelFacebookSdk
     {
         if ( empty($callback_url))
         {
-            $callback_url = $this->config->get('app.url') . $this->config->get('laravel-facebook-sdk::default_redirect_uri');
+            $callback_url = url($this->config->get('laravel-facebook-sdk::default_redirect_uri'));
         }
 
         return $this->fqb->auth()->getTokenFromRedirect($callback_url);
