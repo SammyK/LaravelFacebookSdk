@@ -1,6 +1,12 @@
 # CHANGELOG
 
 
+## 1.2.0 - February 21, 2015
+
+- Fixed an issue with wonky URL-detection.
+- Updated the package dependencies.
+
+
 ## 1.1.2 - January 21, 2015
 
 - Explicit imports of facades in routes.
