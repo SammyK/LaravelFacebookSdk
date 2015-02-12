@@ -15,13 +15,16 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "~4",
+        "illuminate/routing": "~4",
         "illuminate/config": "~4",
         "illuminate/session": "~4",
         "sammyk/facebook-query-builder": "~1.1",
         "nesbot/Carbon": "*"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "~0.9",
+        "squizlabs/php_codesniffer": "~2.0"
     },
     "autoload": {
         "psr-4": {

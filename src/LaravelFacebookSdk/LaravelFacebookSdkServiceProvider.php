@@ -42,7 +42,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
         // Main Service
         $this->app->bindShared('laravel-facebook-sdk', function($app)
         {
-            $facebook = new LaravelFacebookSdk($app['facebook-query-builder'], $app['config']);
+            $facebook = new LaravelFacebookSdk($app['facebook-query-builder'], $app['config'], $app['url']);
 
             $facebook->setAuthDriver(new LaravelAuthFacebook($this->app['auth']->driver()));
 

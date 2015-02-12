@@ -1,6 +1,7 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
 use Illuminate\Config\Repository as Config;
+use Illuminate\Routing\UrlGenerator as Url;
 use Closure;
 use ReflectionClass;
 use SammyK\FacebookQueryBuilder\FQB;
@@ -29,6 +30,11 @@ class LaravelFacebookSdk
     protected $config;
 
     /**
+     * @var Url
+     */
+    protected $url;
+
+    /**
      * Facebook objects that have helper classes
      *
      * @var array
@@ -55,11 +61,13 @@ class LaravelFacebookSdk
     /**
      * @param \SammyK\FacebookQueryBuilder\FQB $fqb
      * @param Config                $config
+     * @param Url                $url
      */
-    public function __construct(FQB $fqb, Config $config)
+    public function __construct(FQB $fqb, Config $config, Url $url)
     {
         $this->fqb = $fqb;
         $this->config = $config;
+        $this->url = $url;
     }
 
     /**
@@ -122,7 +130,7 @@ class LaravelFacebookSdk
 
         if ( empty($callback_url))
         {
-            $callback_url = url($this->config->get('laravel-facebook-sdk::default_redirect_uri'));
+            $callback_url = $this->url->to($this->config->get('laravel-facebook-sdk::default_redirect_uri'));
         }
 
         return $this->fqb->auth()->getLoginUrl($callback_url, $scope);
@@ -138,7 +146,7 @@ class LaravelFacebookSdk
     {
         if ( empty($callback_url))
         {
-            $callback_url = url($this->config->get('laravel-facebook-sdk::default_redirect_uri'));
+            $callback_url = $this->url->to($this->config->get('laravel-facebook-sdk::default_redirect_uri'));
         }
 
         return $this->fqb->auth()->getTokenFromRedirect($callback_url);

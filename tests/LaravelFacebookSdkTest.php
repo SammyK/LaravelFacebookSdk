@@ -7,13 +7,15 @@ class LaravelFacebookSdkTest extends PHPUnit_Framework_TestCase
 {
     protected $fqb_mock;
     protected $config_mock;
+    protected $url_mock;
     protected $laravel_facebook_sdk;
 
     public function setUp()
     {
         $this->fqb_mock = m::mock('SammyK\FacebookQueryBuilder\FQB');
         $this->config_mock = m::mock('Illuminate\Config\Repository');
-        $this->laravel_facebook_sdk = new LaravelFacebookSdk($this->fqb_mock, $this->config_mock);
+        $this->url_mock = m::mock('Illuminate\Routing\UrlGenerator');
+        $this->laravel_facebook_sdk = new LaravelFacebookSdk($this->fqb_mock, $this->config_mock, $this->url_mock);
     }
 
     public function tearDown()
@@ -72,6 +74,12 @@ class LaravelFacebookSdkTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function when_no_arguments_are_passed_the_get_login_url_method_will_default_to_config()
     {
+        $this->url_mock
+            ->shouldReceive('to')
+            ->with('/foo')
+            ->once()
+            ->andReturn('http://foo.bar/foo');
+
         $this->config_mock
             ->shouldReceive('get')
             ->with('laravel-facebook-sdk::default_scope')
@@ -79,17 +87,12 @@ class LaravelFacebookSdkTest extends PHPUnit_Framework_TestCase
             ->andReturn(['foo', 'bar']);
         $this->config_mock
             ->shouldReceive('get')
-            ->with('app.url')
-            ->once()
-            ->andReturn('http://foohost');
-        $this->config_mock
-            ->shouldReceive('get')
             ->with('laravel-facebook-sdk::default_redirect_uri')
             ->once()
             ->andReturn('/foo');
         $this->fqb_mock
             ->shouldReceive('auth->getLoginUrl')
-            ->with('http://foohost/foo', ['foo', 'bar'])
+            ->with('http://foo.bar/foo', ['foo', 'bar'])
             ->once()
             ->andReturn('http://foo.bar');
 
@@ -106,11 +109,11 @@ class LaravelFacebookSdkTest extends PHPUnit_Framework_TestCase
             ->never();
         $this->fqb_mock
             ->shouldReceive('auth->getLoginUrl')
-            ->with('/foo', ['foo', 'bar'])
+            ->with('http://foo.bar/bar', ['foo', 'bar'])
             ->once()
             ->andReturn('http://foo.bar');
 
-        $login_url = $this->laravel_facebook_sdk->getLoginUrl(['foo', 'bar'], '/foo');
+        $login_url = $this->laravel_facebook_sdk->getLoginUrl(['foo', 'bar'], 'http://foo.bar/bar');
 
         $this->assertEquals('http://foo.bar', $login_url);
     }
