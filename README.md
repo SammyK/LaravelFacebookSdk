@@ -12,7 +12,6 @@ A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https
 - [Saving Data From Facebook In The Database](#saving-data-from-facebook-in-the-database)
 - [Logging The User Into Laravel](#logging-the-user-into-laravel)
 - [Error Handling](#error-handling)
-- [Examples](#examples)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Credits](#credits)
@@ -180,7 +179,7 @@ Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFaceb
     $facebook_user = $response->getGraphUser();
 
     // Create the user if it does not exist or update the existing entry.
-    // This will only work if you've added the FacebookableTrait to your User model.
+    // This will only work if you've added the SyncableGraphNodeTrait to your User model.
     $user = App\User::createOrUpdateGraphNode($facebook_user);
 
     // Log the user into Laravel
