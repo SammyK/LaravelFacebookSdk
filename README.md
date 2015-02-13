@@ -19,6 +19,25 @@ A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https
 
 > **This is package for Laravel 5!** For Laravel 4.2, [see the 1.x branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.1).
 
+
+## Shouldn't I just use Laravel Socialite?
+
+Laravel 5 comes with support for [Socialite](http://laravel.com/docs/5.0/authentication#social-authentication) which allows you to authenticate with OAuth 2.0 providers. Facebook Login uses OAuth 2.0 and therefore Socialite supports Facebook Login.
+
+If all you need is to authenticate an app and grab a user access token to pull basic data on a user, then Socialite or The PHP League's [Facebook OAuth Client](https://github.com/thephpleague/oauth2-facebook) should suffice for your needs.
+
+But if you need any of the following features, you'll want to tie in the Facebook PHP SDK with this package:
+
+- Obtaining an access token from the signed request in:
+    - The cookie set by the Facebook JavaScript SDK
+    - The `signed_request` param `POST`'ed to an app canvas
+    - The `signed_request` param `POST`'ed to a Facebook page tab
+- Photo or video uploads
+- Batch requests
+- Easy pagination
+- Getting Graph data returned as collections
+
+
 ## Installation
 
 Add the Laravel Facebook SDK package to your `composer.json` file.
