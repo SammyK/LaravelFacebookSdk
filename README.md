@@ -10,7 +10,8 @@ A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https
 
 ----
 
-![Laravel 5](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)
+
+[![Laravel 5](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs/5.0)
 
 **This is package for Laravel 5!** For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2).
 
