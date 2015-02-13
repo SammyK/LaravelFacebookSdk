@@ -5,7 +5,9 @@
 [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https://github.com/facebook/facebook-php-sdk-v4) into Laravel 5.
+A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.
+
+[[ **This is package for Laravel 5!** For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2). ]]
 
 - [Installation](#installation)
 - [Facebook Login](#facebook-login)
@@ -16,8 +18,6 @@ A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https
 - [Contributing](#contributing)
 - [Credits](#credits)
 - [License](#license)
-
-> **This is package for Laravel 5!** For Laravel 4.2, [see the 1.x branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.1).
 
 
 ## Shouldn't I just use Laravel Socialite?
@@ -42,15 +42,16 @@ But if you need any of the following features, you'll want to tie in the Faceboo
 
 Add the Laravel Facebook SDK package to your `composer.json` file.
 
-> **Note:** The `@dev` minimum stability flag can be removed once the Facebook releases version 4.1 of the SDK. Right now it's in a feature-freeze until it is released so there shouldn't be any breaking changes. :)
-
 ```json
 {
     "require": {
-        "sammyk/laravel-facebook-sdk": "~2.0@dev"
+        "sammyk/laravel-facebook-sdk": "~2.0@dev",
+        "facebook/php-sdk-v4": "~4.1.0@dev"
     }
 }
 ```
+
+> **Note:** The Facebook PHP SDK v4.1 is still in dev mode but has reached a feature-freeze until it is tagged as stable so there shouldn't be any breaking changes. :) But because it's in dev mode you'll need to require it explicitly in your require using the `@dev` minimum stability flag since [composer won't pull in a dev mode dependency of a dependency](https://getcomposer.org/doc/faqs/why-can%27t-composer-load-repositories-recursively.md).
 
 
 ### Service Provider
