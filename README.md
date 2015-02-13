@@ -8,7 +8,13 @@
 
 A fully unit-tested package for easily integrating the [Facebook SDK v4.0](https://github.com/facebook/facebook-php-sdk-v4/tree/4.0-dev) into Laravel 4.2 which also harnesses the power of [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder).
 
-> **This is package for Laravel 4.2!** For Laravel 5, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0).
+----
+
+**This is package for**
+
+[![Laravel 4.2](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-4.2.png)](http://laravel.com/docs/4.2)
+
+_For Laravel 5, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0)._
 
 ----
 
