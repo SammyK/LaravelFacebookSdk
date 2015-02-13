@@ -103,6 +103,23 @@ $ php artisan vendor:publish --provider="sammyk/laravel-facebook-sdk" --tag="con
 You'll need to update the `app_id` and `app_secret` values in the config file with [your app ID and secret](https://developers.facebook.com/apps).
 
 
+### Syncing Graph nodes with Laravel models
+
+If you have a `facebook_user_id` column in your user's table, you can add the `SyncableGraphNodeTrait` to your `User` model to have the user node from the Graph API automatically sync with your model.
+
+```php
+class User extends Eloquent implements UserInterface {
+    use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
+    
+    protected static $graph_node_field_aliases = [
+        'id' => 'facebook_user_id',
+    ];
+}
+```
+
+More info on [saving data from Facebook in the database](#saving-data-from-facebook-in-the-database).
+
+
 ## User Login From Redirect Example
 
 Here's a full example of how you might log a user into your app using the [redirect method](#login-from-redirect).
@@ -414,7 +431,7 @@ $fb->setDefaultAccessToken($token);
 ```
 
 
-## Saving Data From Facebook In The Database
+## Saving data from Facebook in the database
 
 Saving data received from the Graph API to a database can sometimes be a tedious endeavor. Since the Graph API returns data in a predictable format, the `SyncableGraphNodeTrait` can make saving the data to a database a painless process.
 
