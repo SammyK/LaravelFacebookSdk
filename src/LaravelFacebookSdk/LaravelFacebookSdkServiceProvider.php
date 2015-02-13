@@ -21,8 +21,6 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/laravel-facebook-sdk.php' => config_path('laravel-facebook-sdk.php'),
         ], 'config');
-
-        $this->loadViewsFrom(__DIR__.'/../views', 'laravel-facebook-sdk');
     }
 
     /**
