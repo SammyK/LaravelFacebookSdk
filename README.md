@@ -1,13 +1,14 @@
 # Laravel Facebook SDK
 
-[![Build Status](http://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
-[![Latest Stable Version](http://img.shields.io/badge/Development%20Version-2.0.0-orange.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
-[![License](http://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
+[![Latest Stable Version](https://img.shields.io/badge/Development%20Version-2.0.0-orange.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![Total Downloads](https://img.shields.io/packagist/dt/sammyk/laravel-facebook-sdk.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
 A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.
 
-> **This is package for Laravel 5!** For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2).
+> **This is package for Laravel 5!** For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2). :+1:
 
 ----
 
