@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\Facade;
  */
 class FacebookFacade extends Facade
 {
-
     /**
      * Get the registered name of the component.
      *
+     * Don't use this. Just... don't.
+     *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'laravel-facebook-sdk'; }
-
+    protected static function getFacadeAccessor()
+    {
+        return 'Facebook\Exceptions\FacebookSDKException';
+    }
 }

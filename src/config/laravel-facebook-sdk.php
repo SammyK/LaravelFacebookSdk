@@ -1,16 +1,25 @@
 <?php
 
 return [
-
     /*
      * In order to integrate the Facebook SDK into your site,
      * you'll need to create an app on Facebook and enter the
      * app's ID and secret here.
      *
      * Add an app: https://developers.facebook.com/apps
+     *
+     * You can add additional config options here that are
+     * available on the main Facebook\Facebook super service.
+     *
+     * https://github.com/facebook/facebook-php-sdk-v4/blob/master/src/Facebook/Facebook.php#L132
      */
-    'app_id' => ':your_facebook_app_id',
-    'app_secret' => ':your_facebook_app_secret',
+    'facebook_config' => [
+        'app_id' => 'your_facebook_app_id',
+        'app_secret' => 'your_facebook_app_secret',
+        'default_graph_version' => 'v2.2',
+        //'enable_beta_mode' => true,
+        //'http_client_handler' => 'guzzle',
+    ],
 
     /*
      * The default list of permissions that are
@@ -32,23 +41,5 @@ return [
      * The default endpoint that Facebook will redirect to after
      * an authentication attempt.
      */
-    'default_redirect_uri' => '/facebook/login',
-
-    /*
-     * For a full list of locales supported by Facebook visit:
-     *
-     * https://www.facebook.com/translations/FacebookLocales.xml
-     */
-    'locale' => 'en_US',
-
-    /*
-     * Allows you to customize the channel endpoint. Most
-     * configurations won't need to change this but if you do,
-     * and you're using the JavaScript SDK, make sure you also
-     * update the "channelUrl" option in "FB.init()".
-     *
-     * https://developers.facebook.com/blog/post/2011/08/02/how-to--optimize-social-plugin-performance/
-     */
-    'channel_endpoint' => '/channel.html',
-
+    'default_redirect_uri' => '/facebook/callback',
     ];

@@ -1,32 +1,43 @@
 {
     "name": "sammyk/laravel-facebook-sdk",
-    "description": "Fully unit tested Facebook SDK v4 integration for Laravel",
+    "description": "Fully unit tested Facebook SDK v4.1 integration for Laravel 5",
     "keywords": ["facebook", "laravel", "sdk", "facebook sdk v4", "facebook query builder"],
     "homepage": "https://github.com/SammyK/LaravelFacebookSdk",
     "license": "MIT",
     "authors": [
         {
             "name": "Sammy Kaye Powers",
-            "email": "sammyk@sammykmedia.com",
+            "email": "me@sammyk.me",
             "homepage": "http://sammyk.me",
             "role": "Developer"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/auth": "~4",
-        "illuminate/database": "~4",
-        "illuminate/support": "~4",
-        "illuminate/config": "~4",
-        "illuminate/session": "~4",
+        "illuminate/auth": "~5",
+        "illuminate/config": "~5",
+        "illuminate/database": "~5",
+        "illuminate/routing": "~5",
+        "illuminate/session": "~5",
+        "illuminate/support": "~5",
         "facebook/php-sdk-v4": "~4.1.0@dev"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master@dev"
+        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "~0.9",
+        "squizlabs/php_codesniffer": "~2.0"
     },
     "autoload": {
         "psr-4": {
-            "SammyK\\LaravelFacebookSdk\\": ["src/LaravelFacebookSdk", "tests"]
+            "SammyK\\LaravelFacebookSdk\\": "src/LaravelFacebookSdk"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SammyK\\LaravelFacebookSdk\\Test\\": "tests"
+        }
+    },
+    "branch-alias": {
+        "dev-master": "2.x-dev"
     }
 }

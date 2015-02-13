@@ -1,18 +1,19 @@
-<?php
+<?php namespace SammyK\LaravelFacebookSdk\Test;
 
-use SammyK\LaravelFacebookSdk\FacebookableTrait;
+use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
 
 class FakeModel extends \Illuminate\Database\Eloquent\Model
 {
     public static function firstByAttributes(array $data)
     {
-        if( $data['facebook_id'] !== '1' )
-        {
+        if( $data['facebook_id'] !== '1' ) {
             return null;
         }
+
         $obj = new static();
         $obj->faz = 'Baz';
         $obj->email = 'me@me.com';
+
         return $obj;
     }
 
@@ -24,22 +25,22 @@ class FakeModel extends \Illuminate\Database\Eloquent\Model
 
 class MyEmptyModel extends FakeModel
 {
-    use FacebookableTrait;
+    use SyncableGraphNodeTrait;
 
-    protected static $facebook_field_aliases = [];
+    protected static $graph_node_field_aliases = [];
 }
 
 class MyUserModel extends FakeModel
 {
-    use FacebookableTrait;
+    use SyncableGraphNodeTrait;
 
-    protected static $facebook_field_aliases = [
+    protected static $graph_node_field_aliases = [
         'id' => 'facebook_id',
         'foo' => 'faz',
         ];
 }
 
-class FacebookableTraitTest extends PHPUnit_Framework_TestCase
+class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testFieldToColumnNameReturnsFieldNameWhenNoAliasPresent()
     {
@@ -63,7 +64,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
     {
         $my_empty_model = new MyEmptyModel();
 
-        $facebook_object_key = $my_empty_model::getFacebookObjectKeyName();
+        $facebook_object_key = $my_empty_model::getGraphNodeKeyName();
 
         $this->assertEquals('id', $facebook_object_key);
     }
@@ -72,7 +73,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
     {
         $my_user_model = new MyUserModel();
 
-        $facebook_object_key = $my_user_model::getFacebookObjectKeyName();
+        $facebook_object_key = $my_user_model::getGraphNodeKeyName();
 
         $this->assertEquals('facebook_id', $facebook_object_key);
     }
@@ -82,7 +83,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
         $my_user_model = new MyUserModel();
 
         $my_object = new FakeModel();
-        $my_user_model::mapFacebookFieldsToObject($my_object, [
+        $my_user_model::mapGraphNodeFieldNamesToDatabaseColumnNames($my_object, [
                 'id' => '1234567890',
                 'foo' => 'My Foo',
                 'email' => 'foo@bar.com',
@@ -96,7 +97,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
     public function testFirstOrNewFacebookObjectCreatesNewStaticObjectWhenOneDoesNotExist()
     {
         $my_user_model = new MyUserModel();
-        $my_object = $my_user_model::firstOrNewFacebookObject([
+        $my_object = $my_user_model::firstOrNewGraphNode([
                 'facebook_id' => '1234567890',
             ]);
 
@@ -106,7 +107,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
     public function testFirstOrNewFacebookObjectReturnsExistingObject()
     {
         $my_user_model = new MyUserModel();
-        $my_object = $my_user_model::firstOrNewFacebookObject([
+        $my_object = $my_user_model::firstOrNewGraphNode([
                 'facebook_id' => '1',
             ]);
 
@@ -117,7 +118,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
     {
         $my_user_model = new MyUserModel();
 
-        $user_object = $my_user_model::createOrUpdateFacebookObject([
+        $user_object = $my_user_model::createOrUpdateGraphNode([
                 'id' => '1234567890',
                 'foo' => 'My Foo',
                 'email' => 'foo@bar.com',
@@ -132,7 +133,7 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
     {
         $my_user_model = new MyUserModel();
 
-        $user_object = $my_user_model::createOrUpdateFacebookObject([
+        $user_object = $my_user_model::createOrUpdateGraphNode([
                 'id' => '1',
                 'foo' => 'My Foo',
                 'email' => 'foo@bar.com',

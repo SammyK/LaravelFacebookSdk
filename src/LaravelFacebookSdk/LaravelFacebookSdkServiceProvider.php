@@ -4,7 +4,6 @@ use Illuminate\Support\ServiceProvider;
 
 class LaravelFacebookSdkServiceProvider extends ServiceProvider
 {
-
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -19,9 +18,11 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->package('sammyk/laravel-facebook-sdk', null, __DIR__.'/../');
+        $this->publishes([
+            __DIR__.'/../config/laravel-facebook-sdk.php' => config_path('laravel-facebook-sdk.php'),
+        ], 'config');
 
-        include __DIR__.'/../routes.php';
+        $this->loadViewsFrom(__DIR__.'/../views', 'laravel-facebook-sdk');
     }
 
     /**
@@ -32,23 +33,18 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
     public function register()
     {
         // Main Service
-        $this->app->bindShared('laravel-facebook-sdk', function($app)
-        {
-            return new LaravelFacebookSdk($app['config'], [
-                'app_id' => $app['config']->get('laravel-facebook-sdk::app_id'),
-                'app_secret' => $app['config']->get('laravel-facebook-sdk::app_secret'),
-                'persistent_data_handler' => new LaravelPersistentDataHandler(),
-                'url_detection_handler' => new LaravelUrlDetectionHandler(),
-            ]);
-        });
+        $this->app->bind('SammyK\LaravelFacebookSdk\LaravelFacebookSdk', function($app) {
+            $config = $app['config']->get('laravel-facebook-sdk.facebook_config');
 
-        // CLI
-        $this->app->bindShared('command.laravel-facebook-sdk.table', function()
-        {
-            return new LaravelFacebookSdkTableCommand();
-        });
+            if (! isset($config['persistent_data_handler'])) {
+                $config['persistent_data_handler'] = new LaravelPersistentDataHandler($app['session.store']);
+            }
 
-        $this->commands('command.laravel-facebook-sdk.table');
+            if (! isset($config['url_detection_handler'])) {
+                $config['url_detection_handler'] = new LaravelUrlDetectionHandler($app['url']);
+            }
+
+            return new LaravelFacebookSdk($app['config'], $app['url'], $config);
+        });
     }
-
 }
