@@ -7,7 +7,9 @@
 
 A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.
 
-[[ **This is package for Laravel 5!** For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2). ]]
+> **This is package for Laravel 5!** For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2).
+
+----
 
 - [Installation](#installation)
 - [Facebook Login](#facebook-login)
