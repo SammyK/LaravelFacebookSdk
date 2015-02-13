@@ -104,6 +104,93 @@ $ php artisan vendor:publish --provider="sammyk/laravel-facebook-sdk" --tag="con
 You'll need to update the `app_id` and `app_secret` values in the config file with [your app ID and secret](https://developers.facebook.com/apps).
 
 
+## User Login From Redirect Example
+
+Here's a full example of how you might log a user into your app using the [redirect method](#login-from-redirect).
+
+This example also demonstrates how to [exchange a short-lived access token with a long-lived access token](https://www.sammyk.me/access-token-handling-best-practices-in-facebook-php-sdk-v4) and save the user to your `users` table if the entry doesn't exist.
+
+Finally it will log the user in using Laravel's built-in user authentication.
+
+``` php
+// Generate a login URL
+Route::get('/facebook/login', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb)
+{
+    // Send an array of permissions to request
+    $login_url = $fb->getLoginUrl(['email']);
+
+    // Obviously you'd do this in blade :)
+    echo '<a href="' . $login_url . '">Login with Facebook</a>';
+});
+
+// Endpoint that is redirected to after an authentication attempt
+Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb)
+{
+    // Obtain an access token.
+    try {
+        $token = $fb->getAccessTokenFromRedirect();
+    } catch (Facebook\Exceptions\FacebookSDKException $e) {
+        dd($e->getMessage());
+    }
+
+    // Access token will be null if the user denied the request
+    // or if someone just hit this URL outside of the OAuth flow.
+    if (! $token) {
+        // Get the redirect helper
+        $helper = $fb->getRedirectLoginHelper();
+
+        if (! $helper->getError()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // User denied the request
+        dd(
+            $helper->getError(),
+            $helper->getErrorCode(),
+            $helper->getErrorReason(),
+            $helper->getErrorDescription()
+        );
+    }
+
+    if (! $token->isLongLived()) {
+        // OAuth 2.0 client handler
+        $oauth_client = $fb->getOAuth2Client();
+
+        // Extend the access token.
+        try {
+            $token = $oauth_client->getLongLivedAccessToken($token);
+        } catch (Facebook\Exceptions\FacebookSDKException $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    $fb->setDefaultAccessToken($token);
+
+    // Save for later
+    Session::put('fb_user_access_token', (string) $token);
+
+    // Get basic info on the user from Facebook.
+    try {
+        $response = $fb->get('/me?fields=id,name,email');
+    } catch (Facebook\Exceptions\FacebookSDKException $e) {
+        dd($e->getMessage());
+    }
+
+    // Convert the response to a `Facebook/GraphNodes/GraphUser` collection
+    $facebook_user = $response->getGraphUser();
+
+    // Create the user if it does not exist or update the existing entry.
+    // This will only work if you've added the FacebookableTrait to your User model.
+    $user = App\User::createOrUpdateGraphNode($facebook_user);
+
+    // Log the user into Laravel
+    Auth::login($user);
+
+    return redirect('/')->with('message', 'Successfully logged in with Facebook');
+});
+```
+
+
 ## Facebook Login
 
 When we say "log in with Facebook", we really mean "obtain a user access token to make calls to the Graph API on behalf of the user." This is done through Facebook via [OAuth 2.0](http://oauth.net/2/). There are a number of ways to log a user in with Facebook using what the Facbeook PHP SDK calls "[helpers](https://developers.facebook.com/docs/php/reference#helpers)".
@@ -168,7 +255,7 @@ Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFaceb
     try {
         $token = $fb
             ->getRedirectLoginHelper()
-            ->getAccessToken('https://exmaple.com/facebook/callback');
+            ->getAccessToken();
     } catch (Facebook\Exceptions\FacebookSDKException $e) {
         // Failed to obtain access token
         dd($e->getMessage());
@@ -176,7 +263,7 @@ Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFaceb
 });
 ```
 
-There is a wrapper method for `getRedirectLoginHelper()->getAccessToken($callback_url)` in LaravelFacebookSdk called `getAccessTokenFromRedirect()` that defaults the callback URL to whatever the current URL is.
+There is a wrapper method for `getRedirectLoginHelper()->getAccessToken()` in LaravelFacebookSdk called `getAccessTokenFromRedirect()` that defaults the callback URL to whatever the current URL is.
 
 ```php
 Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
@@ -505,96 +592,6 @@ try {
 ```
 
 The LaravelFacebookSdk does not throw any custom exceptions.
-
-
-## Examples
-
-### User Login From Redirect Example
-
-Here's a full example of how you might log a user into your app using the [redirect method](#login-from-redirect).
-
-This example also demonstrates how to [exchange a short-lived access token with a long-lived access token](https://www.sammyk.me/access-token-handling-best-practices-in-facebook-php-sdk-v4) and save the user to your `users` table if the entry doesn't exist.
-
-Finally it will log the user in using Laravel's built-in user authentication.
-
-``` php
-// Generate a login URL
-Route::get('/facebook/login', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb)
-{
-    // Send an array of permissions to request
-    $login_url = $fb->getLoginUrl(['email']);
-
-    // Obviously you'd do this in blade :)
-    echo '<a href="' . $login_url . '">Login with Facebook</a>';
-});
-
-// Endpoint that is redirected to after an authentication attempt
-Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb)
-{
-    // Obtain an access token.
-    try {
-        $token = $fb->getAccessTokenFromRedirect();
-    } catch (Facebook\Exceptions\FacebookSDKException $e) {
-        dd($e->getMessage());
-    }
-
-    // Access token will be null if the user denied the request
-    // or if someone just hit this URL outside of the OAuth flow.
-    if (! $token) {
-        // Get the redirect helper
-        $helper = $fb->getRedirectLoginHelper();
-
-        if (! $helper->getError()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // User denied the request
-        dd(
-            $helper->getError(),
-            $helper->getErrorCode(),
-            $helper->getErrorReason(),
-            $helper->getErrorDescription()
-        );
-    }
-
-    if (! $token->isLongLived())
-    {
-        // OAuth 2.0 client handler
-        $oauth_client = $fb->getOAuth2Client();
-
-        // Extend the access token.
-        try {
-            $token = $oauth_client->getLongLivedAccessToken($token);
-        } catch (Facebook\Exceptions\FacebookSDKException $e) {
-            dd($e->getMessage());
-        }
-    }
-
-    $fb->setDefaultAccessToken($token);
-
-    // Save for later
-    Session::put('fb_user_access_token', (string) $token);
-
-    // Get basic info on the user from Facebook.
-    try {
-        $response = $fb->get('/me?fields=id,name,email');
-    } catch (Facebook\Exceptions\FacebookSDKException $e) {
-        dd($e->getMessage());
-    }
-
-    // Convert the response to a `Facebook/GraphNodes/GraphUser` collection
-    $facebook_user = $response->getGraphUser();
-
-    // Create the user if it does not exist or update the existing entry.
-    // This will only work if you've added the FacebookableTrait to your User model.
-    $user = App\User::createOrUpdateGraphNode($facebook_user);
-
-    // Log the user into Laravel
-    Auth::login($user);
-
-    return redirect('/')->with('message', 'Successfully logged in with Facebook');
-});
-```
 
 
 ## Testing
