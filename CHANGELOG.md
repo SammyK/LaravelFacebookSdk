@@ -1,11 +1,6 @@
 # CHANGELOG
 
 
-## 2.0.1 - February 13, 2015
-
-- Removed view registration dingle-berry from service provider.
-
-
 ## 2.0.0 - February 13, 2015
 
 - Upgraded to work on Laravel 5! Yay!
