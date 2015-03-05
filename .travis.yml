@@ -4,11 +4,12 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
   - hhvm
 
 before_script:
-  - composer self-update
-  - composer install --prefer-source --no-interaction --dev
+  - travis_retry composer self-update
+  - travis_retry composer install --prefer-source --no-interaction --dev
 
 script:
   - ./vendor/bin/phpunit --coverage-text
@@ -16,5 +17,5 @@ script:
 
 matrix:
   allow_failures:
-    - php: hhvm
+    - php: 7.0
   fast_finish: true
