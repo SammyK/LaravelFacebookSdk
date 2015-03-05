@@ -16,6 +16,6 @@ class FacebookFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Facebook\Exceptions\FacebookSDKException';
+        return 'SammyK\LaravelFacebookSdk\LaravelFacebookSdk';
     }
 }
