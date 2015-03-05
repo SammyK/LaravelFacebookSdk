@@ -31,7 +31,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
     public function register()
     {
         // Main Service
-        $this->app->bind('SammyK\LaravelFacebookSdk\LaravelFacebookSdk', function($app) {
+        $this->app->bind('SammyK\LaravelFacebookSdk\LaravelFacebookSdk', function ($app) {
             $config = $app['config']->get('laravel-facebook-sdk.facebook_config');
 
             if (! isset($config['persistent_data_handler'])) {
