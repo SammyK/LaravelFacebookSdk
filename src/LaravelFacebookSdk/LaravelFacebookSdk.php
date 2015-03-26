@@ -1,4 +1,4 @@
-<?php namespace SammyK\LaravelFacebookSdk;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\UrlGenerator as Url;
@@ -18,7 +18,7 @@ class LaravelFacebookSdk
     /**
      * Authentication driver
      *
-     * @var \SammyK\LaravelFacebookSdk\FacebookAuthInterface
+     * @var \Ninelivesevelopment\LaravelFacebookSdk\FacebookAuthInterface
      */
     protected $auth;
 
@@ -155,7 +155,7 @@ class LaravelFacebookSdk
     /**
      * Allows for extending this class with custom methods
      *
-     * @throws \SammyK\LaravelFacebookSdk\LaravelFacebookSdkException
+     * @throws \Ninelivesevelopment\LaravelFacebookSdk\LaravelFacebookSdkException
      * @param string $closure_name
      * @param Closure $closure
      */

@@ -1,4 +1,4 @@
-<?php namespace SammyK\LaravelFacebookSdk\FacebookObjects;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk\FacebookObjects;
 
 class UserHelper extends AbstractHelper
 {
