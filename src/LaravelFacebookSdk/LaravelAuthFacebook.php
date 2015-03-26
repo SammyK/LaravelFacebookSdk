@@ -1,4 +1,4 @@
-<?php namespace SammyK\LaravelFacebookSdk;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk;
 
 use Illuminate\Auth\Guard as Auth;
 

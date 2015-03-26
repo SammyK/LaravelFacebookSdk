@@ -1,4 +1,4 @@
-<?php namespace SammyK\LaravelFacebookSdk;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk;
 
 use Illuminate\Support\ServiceProvider;
 use SammyK\FacebookQueryBuilder\FQB;
@@ -35,7 +35,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
         $this->app->bindShared('facebook-query-builder', function($app)
         {
             FQB::setAppCredentials($app['config']->get('laravel-facebook-sdk::app_id'), $app['config']->get('laravel-facebook-sdk::app_secret'));
-            FQB::setRedirectHelperAlias('\SammyK\LaravelFacebookSdk\LaravelFacebookRedirectLoginHelper');
+            FQB::setRedirectHelperAlias('\Ninelivesevelopment\LaravelFacebookSdk\LaravelFacebookRedirectLoginHelper');
             return new FQB();
         });
 

@@ -1,9 +1,9 @@
-<?php namespace SammyK\LaravelFacebookSdk;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \SammyK\LaravelFacebookSdk\LaravelFacebookSdk
+ * @see \Ninelivesevelopment\LaravelFacebookSdk\LaravelFacebookSdk
  */
 class FacebookFacade extends Facade
 {

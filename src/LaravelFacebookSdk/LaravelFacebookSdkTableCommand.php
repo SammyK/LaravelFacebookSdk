@@ -1,4 +1,4 @@
-<?php namespace SammyK\LaravelFacebookSdk;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;

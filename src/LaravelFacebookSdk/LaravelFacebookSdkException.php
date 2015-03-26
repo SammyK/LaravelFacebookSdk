@@ -1,3 +1,3 @@
-<?php namespace SammyK\LaravelFacebookSdk;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk;
 
 class LaravelFacebookSdkException extends \Exception { }

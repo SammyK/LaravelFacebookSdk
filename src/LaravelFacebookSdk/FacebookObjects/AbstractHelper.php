@@ -1,11 +1,11 @@
-<?php namespace SammyK\LaravelFacebookSdk\FacebookObjects;
+<?php namespace Ninelivesevelopment\LaravelFacebookSdk\FacebookObjects;
 
-use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
+use Ninelivesevelopment\LaravelFacebookSdk\LaravelFacebookSdk;
 
 abstract class AbstractHelper
 {
     /**
-     * @var \SammyK\LaravelFacebookSdk\LaravelFacebookSdk
+     * @var \Ninelivesevelopment\LaravelFacebookSdk\LaravelFacebookSdk
      */
     protected $facebook;
 
@@ -17,7 +17,7 @@ abstract class AbstractHelper
     protected $facebook_object_id = 0;
 
     /**
-     * @param \SammyK\LaravelFacebookSdk\LaravelFacebookSdk
+     * @param \Ninelivesevelopment\LaravelFacebookSdk\LaravelFacebookSdk
      * @param int $id
      */
     public function __construct(LaravelFacebookSdk $facebook, $id = 0)
