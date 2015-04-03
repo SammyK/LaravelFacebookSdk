@@ -116,24 +116,6 @@ class User extends Eloquent implements UserInterface
 Check out the migration file that it generated. If you plan on using the Facebook user ID as the primary key, make sure you have a column called `id` that is a big int and indexed. If you are storing the Facebook ID in a different field, make sure that field exists in the database and make sure to [map to it in your model](#field-mapping).
 
 
-### Field mapping
-
-Since the names of the fields in your database might not match the names of the fields in Graph, you can map the field names in your `User` model using the `$facebook_field_aliases` static variable.
-
-The *keys* of the array are the names of the fields in Graph. The *values* of the array are the names of the columns in the local database.
-
-```php
-class User extends Eloquent implements UserInterface
-{
-    protected static $facebook_field_aliases = [
-        'facebook_field_name' => 'database_column_name',
-        'id' => 'facebook_user_id',
-        'name' => 'full_name',
-    ];
-}
-```
-
-
 ### Saving Data From Facebook
 
 Any model that implements the `FacebookableTrait` will have the `createOrUpdateFacebookObject()` method applied to it. This method really makes it easy to take data that was returned directly from Facebook and create or update it in the local database.
@@ -143,6 +125,146 @@ $facebook_event = Facebook::object('some-event-id')->fields('id', 'name')->get()
 
 // Create the event if not exists or update existing
 $event = Event::createOrUpdateFacebookObject($facebook_event);
+```
+
+
+### Field mapping
+
+Since the names of the fields in your database might not match the names of the fields in Graph, you can map the field names in your `User` model using the `$facebook_field_aliases` static variable.
+
+The *keys* of the array are the names of the fields in Graph. The *values* of the array are the names of the columns in the local database.
+
+```php
+use SammyK\LaravelFacebookSdk\FacebookableTrait;
+
+class User extends Eloquent implements UserInterface
+{
+    use FacebookableTrait;
+    
+    protected static $facebook_field_aliases = [
+        'facebook_field_name' => 'database_column_name',
+        'id' => 'facebook_user_id',
+        'name' => 'full_name',
+    ];
+}
+```
+
+
+### Nested field mapping
+
+Since the Graph API will return some of the fields from a request as other nodes/objects, you can reference the fields on those using nested parameter syntax.
+
+An example might be making a request to `me/events` and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/v2.3/event) will return the [Location node](https://developers.facebook.com/docs/graph-api/reference/location/) via a [Page node](https://developers.facebook.com/docs/graph-api/reference/page). The response data might look like this:
+
+```json
+{
+  "data": [
+    {
+      "id": "123", 
+      "name": "Foo Event", 
+      "place": {
+        "location": {
+          "city": "Dearborn", 
+          "state": "MI", 
+          "country": "United States", 
+          . . .
+        }, 
+        "id": "827346"
+      }
+    },
+    . . .
+  ]
+}
+```
+
+Let's assume you have an event table like this:
+
+```php
+Schema::create('events', function(Blueprint $table)
+{
+    $table->increments('id');
+    $table->bigInteger('facebook_id')->nullable()->unsigned()->index();
+    $table->string('name')->nullable();
+    $table->string('city')->nullable();
+    $table->string('state')->nullable();
+    $table->string('country')->nullable();
+});
+```
+
+Here's how you would map the nested fields to your database table in your `Event` model:
+
+```php
+use SammyK\LaravelFacebookSdk\FacebookableTrait;
+
+class Event extends Eloquent
+{
+    use FacebookableTrait;
+    
+    protected static $facebook_field_aliases = [
+        'id' => 'facebook_id',
+        'place[location][city]' => 'city',
+        'place[location][state]' => 'state',
+        'place[location][country]' => 'country',
+    ];
+}
+```
+
+
+### Ignoring fields
+
+In our original request we made use of [nested requests](https://developers.facebook.com/docs/graph-api/using-graph-api/v2.3#fieldexpansion) to make sure we're only getting back fields that we need. Our raw query might look like:
+
+```
+/me/events?fields=id,name,place{location{city,state,country}}
+```
+
+This is important because when we use `createOrUpdateFacebookObject()`, it will blindly try to insert all the data it receives.
+
+This can cause unexpected behavior since the Graph API will sometimes return extra data we didn't specify. In the above example, the response data will always contain a `place[id]` value even though we didn't request it.
+
+Since we don't have a column in our event table for `place[id]`, we'll get an "Unknown column" error from our database. So we need to tell our model to ignore this column using the `$facebook_ignore_fields` array.
+
+```php
+use SammyK\LaravelFacebookSdk\FacebookableTrait;
+
+class Event extends Eloquent
+{
+    use FacebookableTrait;
+    
+    protected static $facebook_field_aliases = [
+        'id' => 'facebook_id',
+        'place[location][city]' => 'city',
+        'place[location][state]' => 'state',
+        'place[location][country]' => 'country',
+    ];
+    
+    protected static $facebook_ignore_fields = [
+        'place[id]',
+    ];
+}
+```
+
+
+### Saving dates
+
+Since the FQB will automatically cast any dates as `Carbon` instances, any dates returned from the Graph API will need to be accessed from the `field_name[date]` key. Note that there is also a `field_name[timezone_type]` and `field_name[timezone]` key associated with `Carbon` instances so if all you need to store is the date, your mapping might look like this:
+
+```php
+use SammyK\LaravelFacebookSdk\FacebookableTrait;
+
+class Event extends Eloquent
+{
+    use FacebookableTrait;
+    
+    protected static $facebook_field_aliases = [
+        'start_time[date]' => 'start_time',
+    ];
+    
+    protected static $facebook_ignore_fields = [
+        'start_time[timezone_type]',
+        'start_time[timezone]',
+    ];
+}
 ```
 
 
