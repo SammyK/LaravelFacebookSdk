@@ -23,6 +23,37 @@ class MyUserModel extends FakeModel
         ];
 }
 
+class MyStoppableModel extends FakeModel
+{
+    use FacebookableTrait;
+
+    protected static $facebook_field_aliases = [
+      'id' => 'facebook_id',
+    ];
+
+    protected static function facebookObjectWillCreate(MyStoppableModel $model)
+    {
+        if (isset($model->stop_me)) {
+            return false;
+        }
+
+        $model->was_touched_by_create = true;
+
+        return $model;
+    }
+
+    protected static function facebookObjectWillUpdate(MyStoppableModel $model)
+    {
+        if (isset($model->stop_me)) {
+            return false;
+        }
+
+        $model->was_touched_by_update = true;
+
+        return $model;
+    }
+}
+
 class FakeModel
 {
     public static function firstByAttributes(array $data)
@@ -31,7 +62,7 @@ class FakeModel
         {
             return null;
         }
-        $obj = new FakeModel();
+        $obj = new static();
         $obj->faz = 'Baz';
         $obj->email = 'me@me.com';
         return $obj;
@@ -163,5 +194,43 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($user_object->facebook_id, '1');
         $this->assertEquals($user_object->faz, 'My Foo');
         $this->assertEquals($user_object->email, 'foo@bar.com');
+    }
+
+    public function testChangeAModelBeforeUpdating()
+    {
+        $my_object = MyStoppableModel::createOrUpdateFacebookObject([
+          'id' => '1',
+        ]);
+
+        $this->assertObjectHasAttribute('was_touched_by_update', $my_object);
+    }
+
+    public function testChangeAModelBeforeCreating()
+    {
+        $my_object = MyStoppableModel::createOrUpdateFacebookObject([
+          'id' => '1337',
+        ]);
+
+        $this->assertObjectHasAttribute('was_touched_by_create', $my_object);
+    }
+
+    public function testStopAModelFromCreating()
+    {
+        $my_object = MyStoppableModel::createOrUpdateFacebookObject([
+          'id' => '1337',
+          'stop_me' => true,
+        ]);
+
+        $this->assertFalse($my_object, 'Expected to be able to stop the creation of MyStoppableModel');
+    }
+
+    public function testStopAModelFromUpdating()
+    {
+        $my_object = MyStoppableModel::createOrUpdateFacebookObject([
+          'id' => '1',
+          'stop_me' => true,
+        ]);
+
+        $this->assertFalse($my_object, 'Expected to be able to stop updating the MyStoppableModel');
     }
 }

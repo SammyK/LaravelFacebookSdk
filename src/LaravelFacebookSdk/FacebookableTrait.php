@@ -55,7 +55,7 @@ trait FacebookableTrait
      *
      * @param array|\SammyK\FacebookQueryBuilder\GraphObject
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model|bool
      *
      * @throws LaravelFacebookSdkException
      */
@@ -76,9 +76,12 @@ trait FacebookableTrait
 
         $attributes = [static::getFacebookObjectKeyName() => $data['id']];
 
-        $facebook_object = static::firstOrNewFacebookObject($attributes);
+        $facebook_object = static::firstOrNewFacebookObject($attributes, $data);
 
-        static::mapFacebookFieldsToObject($facebook_object, $data);
+        if ( ! $facebook_object)
+        {
+            return false;
+        }
 
         $facebook_object->save();
 
@@ -89,13 +92,30 @@ trait FacebookableTrait
      * Like static::firstOrNew() but without mass assignment
      *
      * @param array $attributes
-     * @return \Illuminate\Database\Eloquent\Model
+     * @param array $data
+     *
+     * @return \Illuminate\Database\Eloquent\Model|bool
      */
-    public static function firstOrNewFacebookObject(array $attributes)
+    public static function firstOrNewFacebookObject(array $attributes, array $data = [])
     {
-        if (is_null($facebook_object = static::firstByAttributes($attributes)))
+        $facebook_object = static::firstByAttributes($attributes);
+
+        if ($facebook_object)
         {
-            $facebook_object = new static();
+            static::mapFacebookFieldsToObject($facebook_object, $data);
+            if (method_exists(__CLASS__, 'facebookObjectWillUpdate'))
+            {
+                return static::facebookObjectWillUpdate($facebook_object);
+            }
+
+            return $facebook_object;
+        }
+
+        $facebook_object = new static();
+        static::mapFacebookFieldsToObject($facebook_object, $data);
+        if (method_exists(__CLASS__, 'facebookObjectWillCreate'))
+        {
+            return static::facebookObjectWillCreate($facebook_object);
         }
 
         return $facebook_object;

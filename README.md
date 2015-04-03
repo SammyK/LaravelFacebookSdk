@@ -268,6 +268,46 @@ class Event extends Eloquent
 ```
 
 
+### Overwriting model creation & update functionality
+
+You may wish to store extra data for a node before saving it for the first time in a database. Or you might have some logic that would keep a model from updating in the database. To help with these two scenarios, there are two methods that will get called on your model if they exist. The methods will get called just before a model is inserted or updated. If the methods return `false`, the model will not save to the database.
+
+```php
+use SammyK\LaravelFacebookSdk\FacebookableTrait;
+
+class Event extends Eloquent
+{
+    use FacebookableTrait;
+
+    public static function facebookObjectWillCreate(Event $model)
+    {
+        // Prevent this specific entry from creating
+        if ($model->name == 'Evil Guy') {
+            return false;
+        }
+
+        // Update the model here if you like
+        $model->meta_data = 'Created';
+
+        return $model;
+    }
+
+    public static function facebookObjectWillUpdate(Event $model)
+    {
+        // Prevent this specific entry from updating
+        if ($model->email == 'foo@example.com') {
+            return false;
+        }
+
+        // Update the model here if you like
+        $model->meta_data = 'Updated';
+
+        return $model;
+    }
+}
+```
+
+
 # Facebook Query Builder
 
 LaravelFacebookSdk is a wrapper for [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder). Any of the Facebook Query Builder methods are accessible via the `Facebook` facade. For a full list of available methods, consult the [Facebook Query Builder documentation](https://github.com/SammyK/FacebookQueryBuilder).
