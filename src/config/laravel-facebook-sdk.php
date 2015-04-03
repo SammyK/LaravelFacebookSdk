@@ -12,11 +12,15 @@ return [
      * available on the main Facebook\Facebook super service.
      *
      * https://github.com/facebook/facebook-php-sdk-v4/blob/master/src/Facebook/Facebook.php#L132
+     *
+     * Using environment variables is the recommended way of
+     * storing your app ID and app secret. Make sure to update
+     * your /.env file with your app ID and secret.
      */
     'facebook_config' => [
-        'app_id' => 'your_facebook_app_id',
-        'app_secret' => 'your_facebook_app_secret',
-        'default_graph_version' => 'v2.2',
+        'app_id' => env('FACEBOOK_APP_ID'),
+        'app_secret' => env('FACEBOOK_APP_SECRET'),
+        'default_graph_version' => 'v2.3',
         //'enable_beta_mode' => true,
         //'http_client_handler' => 'guzzle',
     ],

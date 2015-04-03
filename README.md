@@ -131,6 +131,13 @@ $ php artisan vendor:publish --provider="sammyk/laravel-facebook-sdk" --tag="con
 
 You'll need to update the `app_id` and `app_secret` values in the config file with [your app ID and secret](https://developers.facebook.com/apps).
 
+By default the configuration file will look to environment variables for your app ID and secret. It is recommended that you use environment variables to store this info in order to protect your app secret from attackers. Make sure to update your `/.env` file with your app ID & secret.
+
+```
+FACEBOOK_APP_ID=1234567890
+FACEBOOK_APP_SECRET=SomeFooAppSecret
+```
+
 
 ### Syncing Graph nodes with Laravel models
 
@@ -337,7 +344,7 @@ By default the JavaScript SDK will not set a cookie, so you have to explicitly e
 FB.init({
   appId      : 'your-app-id',
   cookie     : true,
-  version    : 'v2.2'
+  version    : 'v2.3'
 });
 ```
 
