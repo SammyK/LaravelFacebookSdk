@@ -5,8 +5,6 @@ use SammyK\LaravelFacebookSdk\FacebookableTrait;
 class MyEmptyModel extends FakeModel
 {
     use FacebookableTrait;
-
-    protected static $facebook_field_aliases = [];
 }
 
 class MyUserModel extends FakeModel
@@ -16,6 +14,12 @@ class MyUserModel extends FakeModel
     protected static $facebook_field_aliases = [
         'id' => 'facebook_id',
         'foo' => 'faz',
+        'owner[name]' => 'owner_name',
+        ];
+
+    protected static $facebook_ignore_fields = [
+        'no_good_column',
+        'owner[id]',
         ];
 }
 
@@ -79,18 +83,36 @@ class FacebookableTraitTest extends PHPUnit_Framework_TestCase
 
     public function testCanRemapFacebookFieldsToDatabaseArray()
     {
-        $my_user_model = new MyUserModel();
-
-        $my_object = new FakeModel();
-        $my_user_model::mapFacebookFieldsToObject($my_object, [
+        $my_object = MyUserModel::createOrUpdateFacebookObject([
                 'id' => '1234567890',
                 'foo' => 'My Foo',
                 'email' => 'foo@bar.com',
+                'owner' => [
+                    'id' => '1337',
+                    'name' => 'Jane McFart Pants',
+                    'foo' => 'bar',
+                ],
             ]);
 
         $this->assertEquals($my_object->facebook_id, '1234567890');
         $this->assertEquals($my_object->faz, 'My Foo');
         $this->assertEquals($my_object->email, 'foo@bar.com');
+        $this->assertEquals($my_object->owner_name, 'Jane McFart Pants');
+        $this->assertEquals($my_object->{'owner[foo]'}, 'bar');
+    }
+
+    public function testCanIgnoreFacebookFields()
+    {
+        $my_object = MyUserModel::createOrUpdateFacebookObject([
+                'id' => '123',
+                'owner' => [
+                    'id' => '1337',
+                    'foo' => 'bar',
+                ],
+            ]);
+
+        $this->assertFalse(isset($my_object->{'owner[id]'}), 'Did not expect "owner[id]" to be set');
+        $this->assertEquals($my_object->{'owner[foo]'}, 'bar');
     }
 
     public function testFirstOrNewFacebookObjectCreatesNewStaticObjectWhenOneDoesNotExist()

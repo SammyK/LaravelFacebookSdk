@@ -19,7 +19,7 @@ trait FacebookableTrait
      */
     public static function fieldToColumnName($field)
     {
-        if (isset(static::$facebook_field_aliases[$field]))
+        if (property_exists(__CLASS__, 'facebook_field_aliases') && isset(static::$facebook_field_aliases[$field]))
         {
             return static::$facebook_field_aliases[$field];
         }
@@ -66,6 +66,9 @@ trait FacebookableTrait
             $data = $data->toArray();
         }
 
+        $data = static::flattenFacebookDataArray($data);
+        $data = static::removeIgnoreKeysFromFacebookData($data);
+
         if ( ! isset($data['id']))
         {
             throw new LaravelFacebookSdkException('Facebook object id is missing');
@@ -96,5 +99,46 @@ trait FacebookableTrait
         }
 
         return $facebook_object;
+    }
+
+    /**
+     * Flattens an array of data from Graph with the path as the key
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private static function flattenFacebookDataArray(array $data)
+    {
+        $query = http_build_query($data, null, '&');
+        $params = explode('&', $query);
+        $result = [];
+
+        foreach ($params as $param) {
+            list($key, $value) = explode('=', $param, 2);
+            $result[urldecode($key)] = urldecode($value);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Removes any keys from Facebook that we want to ignore
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private static function removeIgnoreKeysFromFacebookData(array $data)
+    {
+        if (property_exists(__CLASS__, 'facebook_ignore_fields') && is_array(static::$facebook_ignore_fields))
+        {
+            foreach (static::$facebook_ignore_fields as $key)
+            {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
     }
 }

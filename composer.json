@@ -17,6 +17,7 @@
         "illuminate/support": "~4",
         "illuminate/routing": "~4",
         "illuminate/config": "~4",
+        "illuminate/database": "~4",
         "illuminate/session": "~4",
         "sammyk/facebook-query-builder": "~1.1",
         "nesbot/Carbon": "*"
