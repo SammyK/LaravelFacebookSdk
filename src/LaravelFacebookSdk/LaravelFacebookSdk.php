@@ -59,7 +59,7 @@ class LaravelFacebookSdk
     protected $closures = [];
 
     /**
-     * @param \SammyK\FacebookQueryBuilder\FQB $fqb
+     * @param FQB $fqb
      * @param Config                $config
      * @param Url                $url
      */
@@ -83,11 +83,21 @@ class LaravelFacebookSdk
     /**
      * Return the authentication driver
      *
-     * @return FacebookAuthInterface $auth
+     * @return FacebookAuthInterface
      */
     public function auth()
     {
         return $this->auth;
+    }
+
+    /**
+     * Return the Facebook Query Builder object
+     *
+     * @return FQB
+     */
+    public function fqb()
+    {
+        return $this->fqb;
     }
 
     /**
