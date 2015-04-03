@@ -32,6 +32,11 @@ _For Laravel 5, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSd
 - [License](#license)
 
 
+# Heads Up About Redirect Login
+
+The redirect login functionality of the 1.x branch is [inherently broken](https://github.com/SammyK/LaravelFacebookSdk/issues/27#issuecomment-89432112). You can still [obtain an access token from JavaScript](https://github.com/SammyK/FacebookQueryBuilder#from-the-javascript-sdk) reliably, but don't use the `getLoginUrl()` methods below in production. [Version 2.0](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0) works fine but it requires Laravel 5. Sorry guys, I can't fix it in 1.x without breaking all the things. :/
+
+
 # Installation
 
 
@@ -352,6 +357,8 @@ $response = Facebook::object($status_update_id)->delete();
 
 ## Obtaining a login URL
 
+> **Warning:** See why you [should not use the redirect login in 1.x in production](#heads-up-about-redirect-login).
+
 You can get a login URL just like you can in Facebook Query Builder.
 
 ```php
@@ -372,6 +379,8 @@ $login_link = Facebook::getLoginUrl(['email', 'user_status'], 'http://my-custom-
 
 
 ## Obtaining an AccessToken object
+
+> **Warning:** See why you [should not use the redirect login in 1.x in production](#heads-up-about-redirect-login).
 
 Just like `getLoginUrl()`, there is a wrapper for `getTokenFromRedirect()` that defaults the callback URL to whatever is set in the config.
 
@@ -411,6 +420,8 @@ Facebook::setAccessToken($token);
 # Examples
 
 ## User Authentication Example
+
+> **Warning:** See why you [should not use the redirect login in 1.x in production](#heads-up-about-redirect-login).
 
 Here's how you might log a user into your site, get a long-lived access token and save the user to your `users` table if they don't already exist then log them in.
 
