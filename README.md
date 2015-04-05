@@ -370,6 +370,8 @@ Route::get('/facebook/javascript', function(SammyK\LaravelFacebookSdk\LaravelFac
 
 ### Login From App Canvas
 
+> **TokenMismatchException:** By default your canvas app will throw a `TokenMismatchException` when you try to view it in Facebook. [See how to fix this issue](#getting-a-tokenmismatchexception-with-canvas-apps).
+
 If your app lives within the context of a Facebook app canvas, you can obtain an access token from the signed request that is `POST`'ed to your app on the first page load.
 
 > **Note:** The canvas helper only obtains an existing access token from the signed request data received from Facebook. If the user visiting your app has not authorized your app yet or their access token has expired, the `getAccessToken()` method will return `null`. In that case you'll need to log the user in with either [a redirect](#login-from-redirect) or [JavaScript](#login-from-javascript).
@@ -394,6 +396,8 @@ Route::get('/facebook/canvas', function(SammyK\LaravelFacebookSdk\LaravelFaceboo
 
 
 ### Login From Page Tab
+
+> **TokenMismatchException:** By default your Page tab will throw a `TokenMismatchException` when you try to view it in Facebook. [See how to fix this issue](#getting-a-tokenmismatchexception-with-canvas-apps).
 
 If your app lives within the context of a Facebook Page tab, that is the same as an app canvas and the "Login From App Canvas" method will also work to obtain an access token. But a Page tab also has additional data in the signed request.
 
@@ -644,6 +648,69 @@ try {
 ```
 
 The LaravelFacebookSdk does not throw any custom exceptions.
+
+
+### Getting a TokenMismatchException with canvas apps
+
+If your app is being served from within the context of an app canvas or Page tab, you'll likely see a `TokenMismatchException` error when you try to view the app on Facebook. This is because Facebook will render your app by sending a POST request to it with a `signed_request` param and since Laravel 5 has [CSRF](http://en.wikipedia.org/wiki/Cross-site_request_forgery) protection that is enabled for every non-read request, the error is triggered. 
+
+Although it's possible to disable this feature completely, it's certainly not recommended as CSRF protection is an important security feature to have on your site and it should be enabled on every route by default.
+
+I followed a blog post that explained how to [disable CSRF protection for specific routes in Laravel 5](http://www.camroncade.com/disable-csrf-for-specific-routes-laravel-5/).
+
+I edited my `app\Http\Middleware\VerifyCsrfToken.php` file and added an `excludedRoutes()` method to it. Then I just created an array of routes that were endpoints to my canvas app or page tab. My complete file looks like this:
+
+```php
+<?php namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Illuminate\Session\TokenMismatchException;
+
+class VerifyCsrfToken extends BaseVerifier
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     *
+     * @throws TokenMismatchException
+     */
+    public function handle($request, Closure $next)
+    {
+        if ($this->isReading($request) || $this->excludedRoutes($request) || $this->tokensMatch($request)) {
+            return $this->addCookieToResponse($request, $next($request));
+        }
+
+        throw new TokenMismatchException;
+    }
+
+    /**
+     * Ignore CSRF on these routes.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    private function excludedRoutes($request)
+    {
+        $routes = [
+          'my-app/canvas',
+          'my-app/page-tab',
+          // ... insert all your canvas endpoints here
+        ];
+
+        foreach($routes as $route){
+            if ($request->is($route)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
 
 
 ## Testing
