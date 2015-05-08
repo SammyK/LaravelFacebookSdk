@@ -1,10 +1,15 @@
 # CHANGELOG
 
 
+## 2.0.1 - May 8, 2015
+
+- Updated the version alias of the Facebook PHP SDK v4.1 to v5 which is the same version but v5 is now following SemVer.
+
+
 ## 2.0.0 - February 13, 2015
 
 - Upgraded to work on Laravel 5! Yay!
-- Upgraded to use the latest Facebook PHP SDK v4.1.
+- Upgraded to use the latest Facebook PHP SDK ~~v4.1~~ **v5**.
 - Removed the [Facebook Query Builder](https://github.com/SammyK/FacebookQueryBuilder) dependency.
 - Removed the migration stub since there's only one column we need to add for most cases.
 - Removed the config, route & view for the `channel.html` since that seems to be deprecated.
@@ -19,7 +24,7 @@
 
 ## 1.1.1 - December 11, 2014
 
-- Updated branching model in preparation of upgrade to Facebook PHP SDK v4.1.
+- Updated branching model in preparation of upgrade to Facebook PHP SDK ~~v4.1~~ **v5**.
 
 
 ## 1.1.0 - July 16, 2014

@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the [Facebook SDK v4.1](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.
+A fully unit-tested package for easily integrating the [Facebook SDK v5](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.
 
 ----
 
@@ -55,12 +55,12 @@ Add the Laravel Facebook SDK package to your `composer.json` file.
 {
     "require": {
         "sammyk/laravel-facebook-sdk": "~2.0@dev",
-        "facebook/php-sdk-v4": "~4.1.0@dev"
+        "facebook/php-sdk-v4": "~5.0@dev"
     }
 }
 ```
 
-> **Note:** The Facebook PHP SDK v4.1 is still in dev mode but has reached a feature-freeze until it is tagged as stable so there shouldn't be any breaking changes. :) But because it's in dev mode you'll need to require it explicitly in your require using the `@dev` minimum stability flag since [composer won't pull in a dev mode dependency of a dependency](https://getcomposer.org/doc/faqs/why-can%27t-composer-load-repositories-recursively.md).
+> **Note:** The Facebook PHP SDK v5 is still in dev mode but has reached a feature-freeze until it is tagged as stable so there shouldn't be any breaking changes. :) But because it's in dev mode you'll need to require it explicitly in your require using the `@dev` minimum stability flag since [composer won't pull in a dev mode dependency of a dependency](https://getcomposer.org/doc/faqs/why-can%27t-composer-load-repositories-recursively.md).
 
 
 ### Service Provider
@@ -266,7 +266,7 @@ The redirect helper can be obtained using the SDK's `getRedirectLoginHelper()` m
 
 #### Generating a login URL
 
-You can get a login URL just like you you do with the Facebook PHP SDK v4.1.
+You can get a login URL just like you you do with the Facebook PHP SDK v5.
 
 ```php
 Route::get('/facebook/login', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
