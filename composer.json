@@ -1,6 +1,6 @@
 {
     "name": "sammyk/laravel-facebook-sdk",
-    "description": "Fully unit tested Facebook SDK v4.1 integration for Laravel 5",
+    "description": "Fully unit tested Facebook SDK v5 integration for Laravel 5",
     "keywords": ["facebook", "laravel", "sdk", "facebook sdk v4", "facebook query builder"],
     "homepage": "https://github.com/SammyK/LaravelFacebookSdk",
     "license": "MIT",
