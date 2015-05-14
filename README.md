@@ -489,15 +489,13 @@ For example if you have an Eloquent model named `Event`, here's how you might gr
 
 ```php
 $response = $fb->get('/some-event-id?fields=id,name');
-$facebook_event = $response->getGraphObject();
+$eventNode = $response->getGraphEvent();
 
 // A method called createOrUpdateGraphNode() on the `Event` eloquent model
 // will create the event if it does not exist or it will update the existing
 // record based on the ID from Facebook.
-$event = Event::createOrUpdateGraphNode($facebook_event);
+$event = Event::createOrUpdateGraphNode($eventNode);
 ```
-
-> **Heads up!** The Facebook PHP SDK calls nodes from the Graph API `GraphObject`'s. This is not a good name for them since the Graph API calls them nodes. This will [most likely be renamed](https://github.com/facebook/facebook-php-sdk-v4/issues/320) to `GraphNode` in a breaking change pretty soon.
 
 The `createOrUpdateGraphNode()` will automatically map the returned field names to the column names in your database. If, for example, your column names on the `events` table don't match the field names for an [Event](https://developers.facebook.com/docs/graph-api/reference/event) node, you can [map the fields](#field-mapping).
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Facebook\GraphNodes\GraphObject;
+use Facebook\GraphNodes\GraphNode;
 
 trait SyncableGraphNodeTrait
 {
@@ -15,7 +16,7 @@ trait SyncableGraphNodeTrait
     /**
      * Inserts or updates the Graph node to the local database
      *
-     * @param array|GraphObject $data
+     * @param array|GraphObject|GraphNode $data
      *
      * @return Model
      *
@@ -24,7 +25,7 @@ trait SyncableGraphNodeTrait
     public static function createOrUpdateGraphNode($data)
     {
         // @todo this will be GraphNode soon
-        if ($data instanceof GraphObject) {
+        if ($data instanceof GraphObject || $data instanceof GraphNode) {
             $data = $data->asArray();
         }
 
