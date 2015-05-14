@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 2.0.2 - May 14, 2015
+
+- Added support for the Facebook PHP SDK's `GraphNode` entity.
+
+
 ## 2.0.1 - May 8, 2015
 
 - Updated the version alias of the Facebook PHP SDK v4.1 to v5 which is the same version but v5 is now following SemVer.
