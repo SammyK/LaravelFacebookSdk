@@ -26,7 +26,7 @@ trait SyncableGraphNodeTrait
     {
         // @todo this will be GraphNode soon
         if ($data instanceof GraphObject || $data instanceof GraphNode) {
-            $data = $data->asArray();
+            $data = array_dot($data->asArray());
         }
 
         if (! isset($data['id'])) {
