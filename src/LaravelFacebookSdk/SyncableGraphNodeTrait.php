@@ -52,7 +52,7 @@ trait SyncableGraphNodeTrait
      */
     public static function firstOrNewGraphNode(array $attributes)
     {
-        if (is_null($facebook_object = static::firstByAttributes($attributes))) {
+        if (is_null($facebook_object = static::firstOrNew($attributes))) {
             $facebook_object = new static();
         }
 
