@@ -1,7 +1,7 @@
 # Laravel Facebook SDK
 
 [![Build Status](https://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
-[![Latest Stable Version](https://img.shields.io/badge/Development%20Version-2.0.0-orange.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![Latest Stable Version](https://img.shields.io/badge/Development%20Version-3.0.0-orange.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![Total Downloads](https://img.shields.io/packagist/dt/sammyk/laravel-facebook-sdk.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
@@ -10,11 +10,12 @@ A fully unit-tested package for easily integrating the [Facebook SDK v5](https:/
 
 ----
 
-**This is package for**
+**This is package for Laravel 5.1**
 
-[![Laravel 5](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs/5.0)
+[![Laravel 5.1](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs/5.1)
 
-_For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2)._
+- _For Laravel 5.0, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0)._
+- _For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2)._
 
 ----
 
@@ -69,7 +70,7 @@ In your app config, add the `LaravelFacebookSdkServiceProvider` to the providers
 
 ```php
 'providers' => [
-    'SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider',
+    SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
     ];
 ```
 
@@ -80,7 +81,7 @@ If you want to make use of the facade, add it to the aliases array in your app c
 
 ```php
 'aliases' => [
-    'Facebook' => 'SammyK\LaravelFacebookSdk\FacebookFacade',
+    'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class,
     ];
 ```
 
