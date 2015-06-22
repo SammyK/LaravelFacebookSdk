@@ -121,7 +121,7 @@ Route::get('/facebook/login', function(SammyK\LaravelFacebookSdk\LaravelFacebook
 After [creating an app in Facebook](https://developers.facebook.com/apps), you'll need to provide the app ID and secret. First publish the configuration file.
 
 ```bash
-$ php artisan vendor:publish --provider="sammyk/laravel-facebook-sdk" --tag="config"
+$ php artisan vendor:publish --provider="SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider" --tag="config"
 ```
 
 > **Where's the file?** Laravel 5 will publish the config file to `config/laravel-facebook-sdk.php`.
