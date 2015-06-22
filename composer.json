@@ -13,13 +13,13 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "illuminate/auth": "~5",
-        "illuminate/config": "~5",
-        "illuminate/database": "~5",
-        "illuminate/routing": "~5",
-        "illuminate/session": "~5",
-        "illuminate/support": "~5",
+        "php": ">=5.5.0",
+        "illuminate/auth": "~5.1",
+        "illuminate/config": "~5.1",
+        "illuminate/database": "~5.1",
+        "illuminate/routing": "~5.1",
+        "illuminate/session": "~5.1",
+        "illuminate/support": "~5.1",
         "facebook/php-sdk-v4": "~5.0@dev"
     },
     "require-dev": {
@@ -38,6 +38,6 @@
         }
     },
     "branch-alias": {
-        "dev-master": "2.x-dev"
+        "dev-master": "3.x-dev"
     }
 }
