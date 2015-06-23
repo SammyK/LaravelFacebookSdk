@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 3.0.0 - June 23, 2015
+
+- Added support for Laravel 5.1.
+
+
 ## 2.0.2 - May 14, 2015
 
 - Added support for the Facebook PHP SDK's `GraphNode` entity.
