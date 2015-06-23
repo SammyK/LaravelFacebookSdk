@@ -55,7 +55,7 @@ Add the Laravel Facebook SDK package to your `composer.json` file.
 ```json
 {
     "require": {
-        "sammyk/laravel-facebook-sdk": "~2.0@dev",
+        "sammyk/laravel-facebook-sdk": "~3.0@dev",
         "facebook/php-sdk-v4": "~5.0@dev"
     }
 }
