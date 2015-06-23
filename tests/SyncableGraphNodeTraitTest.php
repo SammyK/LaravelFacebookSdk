@@ -4,7 +4,7 @@ use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
 
 class FakeModel extends \Illuminate\Database\Eloquent\Model
 {
-    public static function firstByAttributes($data)
+    public static function firstOrNew($data)
     {
         if( $data['facebook_id'] !== '1' ) {
             return null;
