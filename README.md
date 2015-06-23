@@ -10,11 +10,12 @@ A fully unit-tested package for easily integrating the [Facebook SDK v4.0](https
 
 ----
 
-**This is package for**
+**This is package for Laravel 4.2**
 
 [![Laravel 4.2](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-4.2.png)](http://laravel.com/docs/4.2)
 
-_For Laravel 5, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0)._
+_For Laravel 5.1, [see the 3.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0)._
+_For Laravel 5.0, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0)._
 
 ----
 
@@ -34,7 +35,7 @@ _For Laravel 5, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSd
 
 # Heads Up About Redirect Login
 
-The redirect login functionality of the 1.x branch is [inherently broken](https://github.com/SammyK/LaravelFacebookSdk/issues/27#issuecomment-89432112). You can still [obtain an access token from JavaScript](https://github.com/SammyK/FacebookQueryBuilder#from-the-javascript-sdk) reliably, but don't use the `getLoginUrl()` methods below in production. [Version 2.0](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0) works fine but it requires Laravel 5. Sorry guys, I can't fix it in 1.x without breaking all the things. :/
+The redirect login functionality of the 1.x branch is [inherently broken](https://github.com/SammyK/LaravelFacebookSdk/issues/27#issuecomment-89432112). You can still [obtain an access token from JavaScript](https://github.com/SammyK/FacebookQueryBuilder#from-the-javascript-sdk) reliably, but don't use the `getLoginUrl()` methods below in production. [Version 2.0](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0) works fine but it requires Laravel 5.x. Sorry guys, I can't fix it in 1.x without breaking all the things. :/
 
 
 # Installation
