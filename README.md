@@ -6,15 +6,16 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the [Facebook SDK v5](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.
+A fully unit-tested package for easily integrating the [Facebook SDK v5](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.0.
 
 ----
 
-**This is package for**
+**This is package for Laravel 5.0**
 
-[![Laravel 5](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs/5.0)
+[![Laravel 5.0](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs/5.0)
 
-_For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2)._
+- _For Laravel 5.1, [see the 3.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0)._
+- _For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2)._
 
 ----
 
