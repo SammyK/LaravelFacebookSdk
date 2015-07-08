@@ -15,7 +15,7 @@ A fully unit-tested package for easily integrating the [Facebook SDK v5](https:/
 [![Laravel 5.1](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs/5.1)
 
 - _For Laravel 5.0, [see the 2.0 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0)._
-- _For Laravel 4.2, [see the 1.2 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.2)._
+- _For Laravel 4.2, [see the 1.3 branch](https://github.com/SammyK/LaravelFacebookSdk/tree/1.3)._
 
 ----
 
