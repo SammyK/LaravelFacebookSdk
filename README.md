@@ -345,7 +345,7 @@ By default the JavaScript SDK will not set a cookie, so you have to explicitly e
 FB.init({
   appId      : 'your-app-id',
   cookie     : true,
-  version    : 'v2.3'
+  version    : 'v2.4'
 });
 ```
 
