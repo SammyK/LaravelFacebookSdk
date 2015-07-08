@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 2.0.3 - July 8, 2015
+
+- Updated the Graph API version references to latest v2.4.
+
+
 ## 2.0.2 - May 14, 2015
 
 - Added support for the Facebook PHP SDK's `GraphNode` entity.
