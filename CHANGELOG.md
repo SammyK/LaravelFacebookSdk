@@ -1,6 +1,12 @@
 # CHANGELOG
 
 
+## 3.0.1 - July 8, 2015
+
+- Updated the Graph API version references to latest v2.4.
+- Tiny fix in tests when strict errors are displayed.
+
+
 ## 3.0.0 - June 23, 2015
 
 - Added support for Laravel 5.1.
