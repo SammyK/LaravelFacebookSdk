@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## 2.0.4 - July 21, 2015
+
+- Removed `@dev` flag from Facebook PHP SDK since v5 was released. Yay!
+
+
 ## 2.0.3 - July 8, 2015
 
 - Updated the Graph API version references to latest v2.4.

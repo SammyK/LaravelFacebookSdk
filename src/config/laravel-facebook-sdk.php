@@ -11,7 +11,7 @@ return [
      * You can add additional config options here that are
      * available on the main Facebook\Facebook super service.
      *
-     * https://github.com/facebook/facebook-php-sdk-v4/blob/master/src/Facebook/Facebook.php#L132
+     * https://developers.facebook.com/docs/php/Facebook/5.0.0#config
      *
      * Using environment variables is the recommended way of
      * storing your app ID and app secret. Make sure to update
