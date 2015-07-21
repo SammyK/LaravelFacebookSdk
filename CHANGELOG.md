@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.2 - July 21, 2015
+
+- Removed `@dev` flag from Facebook PHP SDK since v5 was released. Yay!
+
 
 ## 3.0.1 - July 8, 2015
 

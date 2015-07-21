@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the [Facebook SDK v5](https://github.com/facebook/facebook-php-sdk-v4/tree/master) into Laravel 5.1.
+A fully unit-tested package for easily integrating the [Facebook SDK v5](https://developers.facebook.com/docs/php/gettingstarted/5.0.0) into Laravel 5.1.
 
 ----
 
@@ -39,13 +39,13 @@ If all you need is to authenticate an app and grab a user access token to pull b
 But if you need any of the following features, you'll want to tie in the Facebook PHP SDK with this package:
 
 - Obtaining an access token from the signed request in:
-    - The cookie set by the Facebook JavaScript SDK
-    - The `signed_request` param `POST`'ed to an app canvas
-    - The `signed_request` param `POST`'ed to a Facebook page tab
-- Photo or video uploads
-- Batch requests
-- Easy pagination
-- Getting Graph data returned as collections
+    - [The cookie set by the Facebook JavaScript SDK](https://developers.facebook.com/docs/php/howto/example_access_token_from_javascript)
+    - [The `signed_request` param `POST`'ed to an app canvas](https://developers.facebook.com/docs/php/howto/example_access_token_from_canvas)
+    - [The `signed_request` param `POST`'ed to a Facebook page tab](https://developers.facebook.com/docs/php/howto/example_access_token_from_page_tab)
+- [Photo](https://developers.facebook.com/docs/php/howto/example_upload_photo) or [video uploads](https://developers.facebook.com/docs/php/howto/example_upload_video)
+- [Batch requests](https://developers.facebook.com/docs/php/howto/example_batch_request)
+- [Easy pagination](https://developers.facebook.com/docs/php/howto/example_pagination_basic)
+- [Getting Graph data returned as collections](https://developers.facebook.com/docs/php/GraphNode/5.0.0)
 
 
 ## Installation
@@ -55,13 +55,10 @@ Add the Laravel Facebook SDK package to your `composer.json` file.
 ```json
 {
     "require": {
-        "sammyk/laravel-facebook-sdk": "~3.0@dev",
-        "facebook/php-sdk-v4": "~5.0@dev"
+        "sammyk/laravel-facebook-sdk": "~3.0"
     }
 }
 ```
-
-> **Note:** The Facebook PHP SDK v5 is still in dev mode but has reached a feature-freeze until it is tagged as stable so there shouldn't be any breaking changes. :) But because it's in dev mode you'll need to require it explicitly in your require using the `@dev` minimum stability flag since [composer won't pull in a dev mode dependency of a dependency](https://getcomposer.org/doc/faqs/why-can%27t-composer-load-repositories-recursively.md).
 
 
 ### Service Provider
