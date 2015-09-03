@@ -1,5 +1,6 @@
 <?php namespace SammyK\LaravelFacebookSdk\Test;
 
+use Facebook\GraphNodes\GraphNode;
 use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
 
 class FakeModel extends \Illuminate\Database\Eloquent\Model
@@ -142,5 +143,22 @@ class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($user_object->facebook_id, '1');
         $this->assertEquals($user_object->faz, 'My Foo');
         $this->assertEquals($user_object->email, 'foo@bar.com');
+    }
+
+    public function testMultiDimensionalArraysCanBeAccessedWithDotNotation()
+    {
+        $my_user_model = new MyUserModel();
+
+        $user_node = new GraphNode([
+          'id' => '1',
+          'location' => [
+            'city' => 'Chicago',
+            'zip' => '60604',
+          ],
+        ]);
+        $user_object = $my_user_model::createOrUpdateGraphNode($user_node);
+
+        $this->assertEquals($user_object['location.city'], 'Chicago');
+        $this->assertEquals($user_object['location.zip'], '60604');
     }
 }
