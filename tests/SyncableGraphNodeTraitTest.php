@@ -46,6 +46,11 @@ class MyCustomDateFormatModel extends MyUserModel
     protected static $graph_node_date_time_to_string_format = 'c';
 }
 
+class MyFillableOnlyFields extends MyUserModel
+{
+    protected static $graph_node_fillable_fields = ['facebook_id', 'keep_me'];
+}
+
 class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testFieldToColumnNameReturnsFieldNameWhenNoAliasPresent()
@@ -191,5 +196,23 @@ class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
         $user_object = $my_user_model::createOrUpdateGraphNode($user_node);
 
         $this->assertEquals($user_object['start_time'], '2016-01-03T17:30:00-05:00');
+    }
+
+    public function testOnlyWhiteListedFieldsWillBeSaved()
+    {
+        $my_user_model = new MyFillableOnlyFields();
+
+        $user_node = new GraphNode([
+          'id' => '1',
+          'start_time' => '2016-01-03T17:30:00-0500',
+          'keep_me' => 'I should exist',
+          'bar' => 'I should not exist',
+        ]);
+        $user_object = $my_user_model::createOrUpdateGraphNode($user_node);
+
+        $this->assertEquals($user_object['facebook_id'], '1');
+        $this->assertNull($user_object['start_time']);
+        $this->assertEquals($user_object['keep_me'], 'I should exist');
+        $this->assertNull($user_object['bar']);
     }
 }

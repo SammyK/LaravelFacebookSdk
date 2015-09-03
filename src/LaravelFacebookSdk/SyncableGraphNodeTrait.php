@@ -14,6 +14,13 @@ trait SyncableGraphNodeTrait
      */
 
     /*
+     * List of Facebook field names that should be inserted
+     * into the local database.
+     *
+     * protected static $graph_node_fillable_fields = [];
+     */
+
+    /*
      * The format the \DateTime instances will be converted
      * to before inserting into the database.
      *
@@ -106,7 +113,9 @@ trait SyncableGraphNodeTrait
     public static function mapGraphNodeFieldNamesToDatabaseColumnNames(Model $object, array $fields)
     {
         foreach ($fields as $field => $value) {
-            $object->{static::fieldToColumnName($field)} = $value;
+            if (static::graphNodeFieldIsWhiteListed(static::fieldToColumnName($field))) {
+                $object->{static::fieldToColumnName($field)} = $value;
+            }
         }
     }
 
@@ -132,5 +141,21 @@ trait SyncableGraphNodeTrait
         }
 
         return $data;
+    }
+
+    /**
+     * Check a key for fillableness
+     *
+     * @param string $key
+     * @return boolean
+     */
+    private static function graphNodeFieldIsWhiteListed($key)
+    {
+        $model_name = get_class(new static());
+        if (!property_exists($model_name, 'graph_node_fillable_fields')) {
+            return true;
+        }
+
+        return in_array($key, static::$graph_node_fillable_fields);
     }
 }
