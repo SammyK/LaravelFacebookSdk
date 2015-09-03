@@ -520,6 +520,24 @@ class User extends Eloquent implements UserInterface
 ```
 
 
+### Specifying "fillable" fields
+
+By default the `createOrUpdateGraphNode()` method will try to insert all the fields of a node into the database. But sometimes the Graph API will return fields that you didn't specifically ask for and don't exist in your database. In those cases we can white list specific fields with the `$graph_node_fillable_fields` property.
+
+```php
+use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
+
+class Event extends Eloquent
+{
+    use SyncableGraphNodeTrait;
+    
+    protected static $graph_node_fillable_fields = ['id', 'name', 'start_time'];
+}
+```
+
+> **Use the name of the database column.** For example, if you've aliased the `id` field to the `facebook_id` column in your databse, you'll want to specify `facebook_id` in your `$graph_node_fillable_fields` array.
+
+
 ### Nested field mapping
 
 Since the Graph API will return some of the fields from a request as other nodes/objects, you can reference the fields on those using Laravel's [`array_dot()` notation](http://laravel.com/docs/helpers#arrays).
