@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 3.1.0 - September 3, 2015
+
+- Added [fillable fields](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0#specifying-fillable-fields) feature.
+- Added [array dot notation to field mapping](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0#nested-field-mapping).
+- Added feature to convert [`DateTime` to string format](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0#date-formats).
+
+
 ## 3.0.2 - July 21, 2015
 
 - Removed `@dev` flag from Facebook PHP SDK since v5 was released. Yay!
