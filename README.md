@@ -520,6 +520,66 @@ class User extends Eloquent implements UserInterface
 ```
 
 
+### Nested field mapping
+
+Since the Graph API will return some of the fields from a request as other nodes/objects, you can reference the fields on those using Laravel's [`array_dot()` notation](http://laravel.com/docs/helpers#arrays).
+
+An example might be making a request to the `/me/events` endpoint and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/v2.3/event) will return the [place.location fields](https://developers.facebook.com/docs/graph-api/reference/location/) as [Location nodes](https://developers.facebook.com/docs/graph-api/reference/location/). The response data might look like this:
+
+```json
+{
+  "data": [
+    {
+      "id": "123", 
+      "name": "Foo Event", 
+      "place": {
+        "location": {
+          "city": "Dearborn", 
+          "state": "MI", 
+          "country": "United States", 
+          . . .
+        }, 
+        "id": "827346"
+      }
+    },
+    . . .
+  ]
+}
+```
+
+Let's assume you have an event table like this:
+
+```php
+Schema::create('events', function(Blueprint $table)
+{
+    $table->increments('id');
+    $table->bigInteger('facebook_id')->nullable()->unsigned()->index();
+    $table->string('name')->nullable();
+    $table->string('city')->nullable();
+    $table->string('state')->nullable();
+    $table->string('country')->nullable();
+});
+```
+
+Here's how you would map the nested fields to your database table in your `Event` model:
+
+```php
+use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
+
+class Event extends Eloquent
+{
+    use SyncableGraphNodeTrait;
+    
+    protected static $facebook_field_aliases = [
+        'id' => 'facebook_id',
+        'place.location.city' => 'city',
+        'place.location.state' => 'state',
+        'place.location.country' => 'country',
+    ];
+}
+```
+
+
 ## Logging The User Into Laravel
 
 The Laravel Facebook SDK makes it easy to log a user in with Laravel's built-in authentication driver.
