@@ -313,7 +313,7 @@ Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFaceb
 });
 ```
 
-There is a wrapper method for `getRedirectLoginHelper()->getAccessToken()` in LaravelFacebookSdk called `getAccessTokenFromRedirect()` that defaults the callback URL to whatever the current URL is.
+There is a wrapper method for `getRedirectLoginHelper()->getAccessToken()` in LaravelFacebookSdk called `getAccessTokenFromRedirect()` that defaults the callback URL to the `laravel-facebook-sdk.default_redirect_uri` config value.
 
 ```php
 Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
