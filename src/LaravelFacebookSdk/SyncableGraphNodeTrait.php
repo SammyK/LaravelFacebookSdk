@@ -24,7 +24,7 @@ trait SyncableGraphNodeTrait
      * The format the \DateTime instances will be converted
      * to before inserting into the database.
      *
-     * protected $graph_node_date_time_to_string_format = 'Y-m-d H:i:s';
+     * protected static $graph_node_date_time_to_string_format = 'Y-m-d H:i:s';
      */
 
     /**
@@ -134,7 +134,6 @@ trait SyncableGraphNodeTrait
         }
         foreach ($data as $key => $value) {
             if ($value instanceof \DateTime) {
-                // @TODO add a config option for date format
                 $data[$key] = $value->format($date_format);
             }
         }
