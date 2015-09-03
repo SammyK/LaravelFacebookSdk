@@ -41,6 +41,11 @@ class MyUserModel extends FakeModel
         ];
 }
 
+class MyCustomDateFormatModel extends MyUserModel
+{
+    protected static $graph_node_date_time_to_string_format = 'c';
+}
+
 class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testFieldToColumnNameReturnsFieldNameWhenNoAliasPresent()
@@ -158,5 +163,27 @@ class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
         $user_object = $my_user_model::createOrUpdateGraphNode($user_node);
         $this->assertEquals($user_object['location.city'], 'Chicago');
         $this->assertEquals($user_object['location.zip'], '60604');
+    }
+
+    public function testDateTimeEntitiesGetConvertedProperly()
+    {
+        $my_user_model = new MyUserModel();
+        $user_node = new GraphNode([
+          'id' => '1',
+          'start_time' => '2016-01-03T17:30:00-0500',
+        ]);
+        $user_object = $my_user_model::createOrUpdateGraphNode($user_node);
+        $this->assertEquals($user_object['start_time'], '2016-01-03 17:30:00');
+    }
+
+    public function testDateTimeEntitiesCanHaveCustomStringFormats()
+    {
+        $my_user_model = new MyCustomDateFormatModel();
+        $user_node = new GraphNode([
+          'id' => '1',
+          'start_time' => '2016-01-03T17:30:00-0500',
+        ]);
+        $user_object = $my_user_model::createOrUpdateGraphNode($user_node);
+        $this->assertEquals($user_object['start_time'], '2016-01-03T17:30:00-05:00');
     }
 }

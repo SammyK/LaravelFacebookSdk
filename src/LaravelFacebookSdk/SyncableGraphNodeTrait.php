@@ -13,6 +13,13 @@ trait SyncableGraphNodeTrait
      * protected static $graph_node_field_aliases = [];
      */
 
+    /*
+     * The format the \DateTime instances will be converted
+     * to before inserting into the database.
+     *
+     * protected $graph_node_date_time_to_string_format = 'Y-m-d H:i:s';
+     */
+
     /**
      * Inserts or updates the Graph node to the local database
      *
@@ -28,6 +35,8 @@ trait SyncableGraphNodeTrait
         if ($data instanceof GraphObject || $data instanceof GraphNode) {
             $data = array_dot($data->asArray());
         }
+
+        $data = static::convertGraphNodeDateTimesToStrings($data);
 
         if (! isset($data['id'])) {
             throw new \InvalidArgumentException('Graph node id is missing');
@@ -99,5 +108,27 @@ trait SyncableGraphNodeTrait
         foreach ($fields as $field => $value) {
             $object->{static::fieldToColumnName($field)} = $value;
         }
+    }
+
+    /**
+     * Convert instances of \DateTime to string
+     *
+     * @param array $data
+     * @return array
+     */
+    private static function convertGraphNodeDateTimesToStrings(array $data)
+    {
+        $date_format = 'Y-m-d H:i:s';
+        $model_name = get_class(new static());
+        if (property_exists($model_name, 'graph_node_date_time_to_string_format')) {
+            $date_format = static::$graph_node_date_time_to_string_format;
+        }
+        foreach ($data as $key => $value) {
+            if ($value instanceof \DateTime) {
+                // @TODO add a config option for date format
+                $data[$key] = $value->format($date_format);
+            }
+        }
+        return $data;
     }
 }
