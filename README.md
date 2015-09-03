@@ -520,6 +520,88 @@ class User extends Eloquent implements UserInterface
 ```
 
 
+### Nested field mapping
+
+Since the Graph API will return some of the fields from a request as other nodes/objects, you can reference the fields on those using Laravel's [`array_dot()` notation](http://laravel.com/docs/helpers#arrays).
+
+An example might be making a request to the `/me/events` endpoint and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/v2.3/event) will return the [place.location fields](https://developers.facebook.com/docs/graph-api/reference/location/) as [Location nodes](https://developers.facebook.com/docs/graph-api/reference/location/). The response data might look like this:
+
+```json
+{
+  "data": [
+    {
+      "id": "123", 
+      "name": "Foo Event", 
+      "place": {
+        "location": {
+          "city": "Dearborn", 
+          "state": "MI", 
+          "country": "United States", 
+          . . .
+        }, 
+        "id": "827346"
+      }
+    },
+    . . .
+  ]
+}
+```
+
+Let's assume you have an event table like this:
+
+```php
+Schema::create('events', function(Blueprint $table)
+{
+    $table->increments('id');
+    $table->bigInteger('facebook_id')->nullable()->unsigned()->index();
+    $table->string('name')->nullable();
+    $table->string('city')->nullable();
+    $table->string('state')->nullable();
+    $table->string('country')->nullable();
+});
+```
+
+Here's how you would map the nested fields to your database table in your `Event` model:
+
+```php
+use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
+
+class Event extends Eloquent
+{
+    use SyncableGraphNodeTrait;
+    
+    protected static $facebook_field_aliases = [
+        'id' => 'facebook_id',
+        'place.location.city' => 'city',
+        'place.location.state' => 'state',
+        'place.location.country' => 'country',
+    ];
+}
+```
+
+
+### Date formats
+
+The Facebook PHP SDK will convert most date formats into instances of [`DateTime`](http://php.net/manual/en/class.datetime.php). This can be problematic when you want to insert a date/time value into the database (e.g. the `start_time` field of an [Event node](https://developers.facebook.com/docs/graph-api/reference/event/)).
+
+By default the `SyncableGraphNodeTrait` will convert all `DateTime` instances to the following [`date()` format](http://php.net/manual/en/function.date.php):
+
+    Y-m-d H:i:s
+
+That should the proper format for most cases on most relational databases. But this format is missing the timezone which might be important to your application. Furthermore if you're storing the date/time values in a different format, you'll want to customize the format that `DateTime` instances get converted to. To do this just add a `$graph_node_date_time_to_string_format` property to your model and set it to any [valid date format](http://php.net/manual/en/function.date.php).
+
+```php
+use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
+
+class Event extends Eloquent
+{
+    use SyncableGraphNodeTrait;
+    
+    protected static $graph_node_date_time_to_string_format = 'c'; # ISO 8601 date
+}
+```
+
+
 ## Logging The User Into Laravel
 
 The Laravel Facebook SDK makes it easy to log a user in with Laravel's built-in authentication driver.
