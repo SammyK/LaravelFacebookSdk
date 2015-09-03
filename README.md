@@ -598,6 +598,28 @@ class Event extends Eloquent
 ```
 
 
+### Date formats
+
+The Facebook PHP SDK will convert most date formats into instances of [`DateTime`](http://php.net/manual/en/class.datetime.php). This can be problematic when you want to insert a date/time value into the database (e.g. the `start_time` field of an [Event node](https://developers.facebook.com/docs/graph-api/reference/event/)).
+
+By default the `SyncableGraphNodeTrait` will convert all `DateTime` instances to the following [`date()` format](http://php.net/manual/en/function.date.php):
+
+    Y-m-d H:i:s
+
+That should the proper format for most cases on most relational databases. But this format is missing the timezone which might be important to your application. Furthermore if you're storing the date/time values in a different format, you'll want to customize the format that `DateTime` instances get converted to. To do this just add a `$graph_node_date_time_to_string_format` property to your model and set it to any [valid date format](http://php.net/manual/en/function.date.php).
+
+```php
+use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
+
+class Event extends Eloquent
+{
+    use SyncableGraphNodeTrait;
+    
+    protected $graph_node_date_time_to_string_format = 'c'; # ISO 8601 date
+}
+```
+
+
 ## Logging The User Into Laravel
 
 The Laravel Facebook SDK makes it easy to log a user in with Laravel's built-in authentication driver.
