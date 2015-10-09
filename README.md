@@ -342,7 +342,7 @@ By default the JavaScript SDK will not set a cookie, so you have to explicitly e
 FB.init({
   appId      : 'your-app-id',
   cookie     : true,
-  version    : 'v2.4'
+  version    : 'v2.5'
 });
 ```
 
@@ -542,7 +542,7 @@ class Event extends Eloquent
 
 Since the Graph API will return some of the fields from a request as other nodes/objects, you can reference the fields on those using Laravel's [`array_dot()` notation](http://laravel.com/docs/helpers#arrays).
 
-An example might be making a request to the `/me/events` endpoint and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/v2.3/event) will return the [place.location fields](https://developers.facebook.com/docs/graph-api/reference/location/) as [Location nodes](https://developers.facebook.com/docs/graph-api/reference/location/). The response data might look like this:
+An example might be making a request to the `/me/events` endpoint and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/event) will return the [place.location fields](https://developers.facebook.com/docs/graph-api/reference/location/) as [Location nodes](https://developers.facebook.com/docs/graph-api/reference/location/). The response data might look like this:
 
 ```json
 {
