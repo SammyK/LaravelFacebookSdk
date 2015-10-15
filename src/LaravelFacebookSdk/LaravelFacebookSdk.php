@@ -26,7 +26,20 @@ class LaravelFacebookSdk extends Facebook
         $this->config_handler = $config_handler;
         $this->url = $url;
 
+        $this->default_config = $config;
         parent::__construct($config);
+    }
+
+    /**
+     * @param string  $app_id
+     * @param string  $app_secret
+     */
+    public function updateAppIdSecret($app_id, $app_secret)
+    {
+        $this->default_config['app_id'] = $app_id;
+        $this->default_config['app_secret'] = $app_secret;
+
+        parent::__construct($this->default_config);
     }
 
     /**
