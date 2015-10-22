@@ -1,8 +1,8 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
+use Facebook\Facebook;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\UrlGenerator as Url;
-use Facebook\Facebook;
 
 class LaravelFacebookSdk extends Facebook
 {
@@ -24,9 +24,9 @@ class LaravelFacebookSdk extends Facebook
     public function __construct(Config $config_handler, Url $url, array $config)
     {
         $this->config_handler = $config_handler;
-        $this->url = $url;
-
+        $this->url            = $url;
         $this->default_config = $config;
+
         parent::__construct($config);
     }
 
@@ -34,12 +34,11 @@ class LaravelFacebookSdk extends Facebook
      * @param string  $app_id
      * @param string  $app_secret
      */
-    public function updateAppIdSecret($app_id, $app_secret)
+    public function newInstance(array $config)
     {
-        $this->default_config['app_id'] = $app_id;
-        $this->default_config['app_secret'] = $app_secret;
+        $new_config = array_merge($this->default_config, $config);
 
-        parent::__construct($this->default_config);
+        parent::__construct($new_config);
     }
 
     /**
@@ -52,7 +51,7 @@ class LaravelFacebookSdk extends Facebook
      */
     public function getLoginUrl(array $scope = [], $callback_url = '')
     {
-        $scope = $this->getScope($scope);
+        $scope        = $this->getScope($scope);
         $callback_url = $this->getCallbackUrl($callback_url);
 
         return $this->getRedirectLoginHelper()->getLoginUrl($callback_url, $scope);
@@ -68,7 +67,7 @@ class LaravelFacebookSdk extends Facebook
      */
     public function getReRequestUrl(array $scope, $callback_url = '')
     {
-        $scope = $this->getScope($scope);
+        $scope        = $this->getScope($scope);
         $callback_url = $this->getCallbackUrl($callback_url);
 
         return $this->getRedirectLoginHelper()->getReRequestUrl($callback_url, $scope);
@@ -84,7 +83,7 @@ class LaravelFacebookSdk extends Facebook
      */
     public function getReAuthenticationUrl(array $scope = [], $callback_url = '')
     {
-        $scope = $this->getScope($scope);
+        $scope        = $this->getScope($scope);
         $callback_url = $this->getCallbackUrl($callback_url);
 
         return $this->getRedirectLoginHelper()->getReAuthenticationUrl($callback_url, $scope);
