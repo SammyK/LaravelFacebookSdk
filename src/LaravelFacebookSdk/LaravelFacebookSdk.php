@@ -37,7 +37,7 @@ class LaravelFacebookSdk extends Facebook
     {
         $new_config = array_merge($this->default_config, $config);
 
-        parent::__construct($new_config);
+        return new static($this->config_handler, $this->url, $config);
     }
 
     /**
