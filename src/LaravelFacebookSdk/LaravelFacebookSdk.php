@@ -31,8 +31,7 @@ class LaravelFacebookSdk extends Facebook
     }
 
     /**
-     * @param string  $app_id
-     * @param string  $app_secret
+     * @param array   $config
      */
     public function newInstance(array $config)
     {
