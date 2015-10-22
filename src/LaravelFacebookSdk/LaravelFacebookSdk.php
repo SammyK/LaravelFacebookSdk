@@ -24,7 +24,7 @@ class LaravelFacebookSdk extends Facebook
     public function __construct(Config $config_handler, Url $url, array $config)
     {
         $this->config_handler = $config_handler;
-        $this->url            = $url;
+        $this->url = $url;
         $this->default_config = $config;
 
         parent::__construct($config);
@@ -50,7 +50,7 @@ class LaravelFacebookSdk extends Facebook
      */
     public function getLoginUrl(array $scope = [], $callback_url = '')
     {
-        $scope        = $this->getScope($scope);
+        $scope = $this->getScope($scope);
         $callback_url = $this->getCallbackUrl($callback_url);
 
         return $this->getRedirectLoginHelper()->getLoginUrl($callback_url, $scope);
@@ -66,7 +66,7 @@ class LaravelFacebookSdk extends Facebook
      */
     public function getReRequestUrl(array $scope, $callback_url = '')
     {
-        $scope        = $this->getScope($scope);
+        $scope = $this->getScope($scope);
         $callback_url = $this->getCallbackUrl($callback_url);
 
         return $this->getRedirectLoginHelper()->getReRequestUrl($callback_url, $scope);
@@ -82,7 +82,7 @@ class LaravelFacebookSdk extends Facebook
      */
     public function getReAuthenticationUrl(array $scope = [], $callback_url = '')
     {
-        $scope        = $this->getScope($scope);
+        $scope = $this->getScope($scope);
         $callback_url = $this->getCallbackUrl($callback_url);
 
         return $this->getRedirectLoginHelper()->getReAuthenticationUrl($callback_url, $scope);
