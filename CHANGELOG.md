@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.0 - November 12, 2015
+
+- Added ability to create new instances of `LaravelFacebookSdk` with a [different app settings](https://github.com/SammyK/LaravelFacebookSdk/tree/2.0#working-with-multiple-apps).
+
 
 ## 2.1.0 - September 3, 2015
 

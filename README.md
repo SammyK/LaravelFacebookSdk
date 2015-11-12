@@ -1,7 +1,7 @@
 # Laravel Facebook SDK
 
 [![Build Status](https://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
-[![Latest Stable Version](https://img.shields.io/badge/Latest%20Stable-2.1-blue.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![Latest Stable Version](https://img.shields.io/badge/Latest%20Stable-2.2-blue.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![Total Downloads](https://img.shields.io/packagist/dt/sammyk/laravel-facebook-sdk.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
@@ -23,6 +23,7 @@ A fully unit-tested package for easily integrating the [Facebook SDK v5](https:/
 - [Facebook Login](#facebook-login)
 - [Saving Data From Facebook In The Database](#saving-data-from-facebook-in-the-database)
 - [Logging The User Into Laravel](#logging-the-user-into-laravel)
+- [Working With Multiple Apps](#working-with-multiple-apps)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -722,6 +723,23 @@ class FacebookController {
        Auth::login($user);
     }
 }
+```
+
+
+## Working With Multiple Apps
+
+If you have multiple Facebook apps that you'd like to use in the same script or you want to tweak the settings during runtime, you can create a new instance of `LaravelFacebookSdk` with the custom settings.
+
+```php
+Route::get('/example', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+    // All the possible configuration options are available here
+    $fb2 = $fb->newInstance([
+      'app_id' => env('FACEBOOK_APP_ID2'),
+      'app_secret' => env('FACEBOOK_APP_SECRET2'),
+      'default_graph_version' => 'v2.5',
+      // . . .
+    ]);
+});
 ```
 
 
