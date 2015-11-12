@@ -17,9 +17,14 @@ class LaravelFacebookSdk extends Facebook
     protected $url;
 
     /**
-     * @param Config  $config_handler
-     * @param Url  $url
-     * @param array   $config
+     * @var array
+     */
+    private $default_config;
+
+    /**
+     * @param Config $config_handler
+     * @param Url $url
+     * @param array $config
      */
     public function __construct(Config $config_handler, Url $url, array $config)
     {
@@ -31,7 +36,9 @@ class LaravelFacebookSdk extends Facebook
     }
 
     /**
-     * @param array   $config
+     * @param array $config
+     *
+     * @return LaravelFacebookSdk
      */
     public function newInstance(array $config)
     {

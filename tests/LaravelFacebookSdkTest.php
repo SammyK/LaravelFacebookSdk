@@ -5,7 +5,6 @@ use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
 
 class LaravelFacebookSdkTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Illuminate\Config\Repository|\Mockery\MockInterface
      */
@@ -82,4 +81,16 @@ class LaravelFacebookSdkTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('scope=dance%2Ctotes', $login_url);
     }
 
+    /** @test */
+    public function the_a_new_instance_can_be_generated_with_new_app_config()
+    {
+        $fb = $this->laravel_facebook_sdk->newInstance([
+          'app_id' => 'app2_id',
+          'app_secret' => 'app2_secret',
+        ]);
+
+        $app_token = (string) $fb->getApp()->getAccessToken();
+
+        $this->assertEquals('app2_id|app2_secret', $app_token);
+    }
 }
