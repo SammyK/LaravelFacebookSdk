@@ -589,7 +589,7 @@ class Event extends Eloquent
 {
     use SyncableGraphNodeTrait;
     
-    protected static $facebook_field_aliases = [
+    protected static $graph_node_field_aliases = [
         'id' => 'facebook_id',
         'place.location.city' => 'city',
         'place.location.state' => 'state',
