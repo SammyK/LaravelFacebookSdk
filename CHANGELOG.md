@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.2.0 - November 12, 2015
+
+- Added ability to create new instances of `LaravelFacebookSdk` with a [different app settings](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0#working-with-multiple-apps).
+
+
 ## 3.1.0 - September 3, 2015
 
 - Added [fillable fields](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0#specifying-fillable-fields) feature.

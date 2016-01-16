@@ -1,7 +1,7 @@
 # Laravel Facebook SDK
 
 [![Build Status](https://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
-[![Latest Stable Version](https://img.shields.io/badge/Latest%20Stable-3.1-blue.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
+[![Latest Stable Version](https://img.shields.io/badge/Latest%20Stable-3.2-blue.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![Total Downloads](https://img.shields.io/packagist/dt/sammyk/laravel-facebook-sdk.svg)](https://packagist.org/packages/sammyk/laravel-facebook-sdk)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
@@ -23,6 +23,7 @@ A fully unit-tested package for easily integrating the [Facebook SDK v5](https:/
 - [Facebook Login](#facebook-login)
 - [Saving Data From Facebook In The Database](#saving-data-from-facebook-in-the-database)
 - [Logging The User Into Laravel](#logging-the-user-into-laravel)
+- [Working With Multiple Apps](#working-with-multiple-apps)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -342,7 +343,7 @@ By default the JavaScript SDK will not set a cookie, so you have to explicitly e
 FB.init({
   appId      : 'your-app-id',
   cookie     : true,
-  version    : 'v2.4'
+  version    : 'v2.5'
 });
 ```
 
@@ -542,7 +543,7 @@ class Event extends Eloquent
 
 Since the Graph API will return some of the fields from a request as other nodes/objects, you can reference the fields on those using Laravel's [`array_dot()` notation](http://laravel.com/docs/helpers#arrays).
 
-An example might be making a request to the `/me/events` endpoint and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/v2.3/event) will return the [place.location fields](https://developers.facebook.com/docs/graph-api/reference/location/) as [Location nodes](https://developers.facebook.com/docs/graph-api/reference/location/). The response data might look like this:
+An example might be making a request to the `/me/events` endpoint and looping through all the events and saving them to your `Event` model. The [Event node](https://developers.facebook.com/docs/graph-api/reference/event) will return the [place.location fields](https://developers.facebook.com/docs/graph-api/reference/location/) as [Location nodes](https://developers.facebook.com/docs/graph-api/reference/location/). The response data might look like this:
 
 ```json
 {
@@ -725,6 +726,23 @@ class FacebookController {
 ```
 
 
+## Working With Multiple Apps
+
+If you have multiple Facebook apps that you'd like to use in the same script or you want to tweak the settings during runtime, you can create a new instance of `LaravelFacebookSdk` with the custom settings.
+
+```php
+Route::get('/example', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+    // All the possible configuration options are available here
+    $fb2 = $fb->newInstance([
+      'app_id' => env('FACEBOOK_APP_ID2'),
+      'app_secret' => env('FACEBOOK_APP_SECRET2'),
+      'default_graph_version' => 'v2.5',
+      // . . .
+    ]);
+});
+```
+
+
 ## Error Handling
 
 The Facebook PHP SDK throws `Facebook\Exceptions\FacebookSDKException` exceptions. Whenever there is an error response from Graph, the SDK will throw a `Facebook\Exceptions\FacebookResponseException` which extends from `Facebook\Exceptions\FacebookSDKException`. If a `Facebook\Exceptions\FacebookResponseException` is thrown you can grab a specific exception related to the error from the `getPrevious()` method.
@@ -752,59 +770,27 @@ If your app is being served from within the context of an app canvas or Page tab
 
 Although it's possible to disable this feature completely, it's certainly not recommended as CSRF protection is an important security feature to have on your site and it should be enabled on every route by default.
 
-I followed a blog post that explained how to [disable CSRF protection for specific routes in Laravel 5](http://www.camroncade.com/disable-csrf-for-specific-routes-laravel-5/).
-
-I edited my `app\Http\Middleware\VerifyCsrfToken.php` file and added an `excludedRoutes()` method to it. Then I just created an array of routes that were endpoints to my canvas app or page tab. My complete file looks like this:
+Add an exception to your canvas endpoint to the `$except` array in your `app\Http\Middleware\VerifyCsrfToken.php` file.
 
 ```php
-<?php namespace App\Http\Middleware;
+<?php
 
-use Closure;
+namespace App\Http\Middleware;
+
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
-use Illuminate\Session\TokenMismatchException;
 
 class VerifyCsrfToken extends BaseVerifier
 {
     /**
-     * Handle an incoming request.
+     * The URIs that should be excluded from CSRF verification.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     *
-     * @throws TokenMismatchException
+     * @var array
      */
-    public function handle($request, Closure $next)
-    {
-        if ($this->isReading($request) || $this->excludedRoutes($request) || $this->tokensMatch($request)) {
-            return $this->addCookieToResponse($request, $next($request));
-        }
-
-        throw new TokenMismatchException;
-    }
-
-    /**
-     * Ignore CSRF on these routes.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    private function excludedRoutes($request)
-    {
-        $routes = [
-          'my-app/canvas',
-          'my-app/page-tab',
-          // ... insert all your canvas endpoints here
-        ];
-
-        foreach($routes as $route){
-            if ($request->is($route)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    protected $except = [
+        'my-app/canvas',
+        'my-app/page-tab',
+        // ... insert all your canvas endpoints here
+    ];
 }
 ```
 
