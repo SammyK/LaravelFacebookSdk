@@ -1,6 +1,6 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
-use Illuminate\Routing\UrlGenerator;
+use Laravel\Lumen\Routing\UrlGenerator;
 use Facebook\Url\UrlDetectionInterface;
 
 class LaravelUrlDetectionHandler implements UrlDetectionInterface
