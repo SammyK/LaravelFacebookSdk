@@ -39,5 +39,8 @@
     },
     "branch-alias": {
         "dev-master": "3.x-dev"
+    },
+    "replace": {
+        "sammyk/laravel-facebook-sdk": "*"
     }
 }
