@@ -61,6 +61,37 @@ trait SyncableGraphNodeTrait
     }
 
     /**
+     * Inserts or updates the Graph node to the local database
+     *
+     * @param array|GraphObject|GraphNode $data
+     *
+     * @return Model
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function newOrUpdateGraphNode($data)
+    {
+        // @todo this will be GraphNode soon
+        if ($data instanceof GraphObject || $data instanceof GraphNode) {
+            $data = array_dot($data->asArray());
+        }
+
+        $data = static::convertGraphNodeDateTimesToStrings($data);
+
+        if (! isset($data['id'])) {
+            throw new \InvalidArgumentException('Graph node id is missing');
+        }
+
+        $attributes = [static::getGraphNodeKeyName() => $data['id']];
+
+        $graph_node = static::firstOrNewGraphNode($attributes);
+
+        static::mapGraphNodeFieldNamesToDatabaseColumnNames($graph_node, $data);
+
+        return $graph_node;
+    }
+
+    /**
      * Like static::firstOrNew() but without mass assignment
      *
      * @param array $attributes
