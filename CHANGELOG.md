@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.2.1 - February 8, 2016
+
+- Updated the config and url type hints to reference interfaces instead of concrete implementations.
+
+
 ## 3.2.0 - November 12, 2015
 
 - Added ability to create new instances of `LaravelFacebookSdk` with a [different app settings](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0#working-with-multiple-apps).
