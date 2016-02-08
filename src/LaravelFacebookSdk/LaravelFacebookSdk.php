@@ -1,7 +1,7 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Routing\UrlGenerator as Url;
+use Illuminate\Contracts\Routing\UrlGenerator as Url;
 use Facebook\Facebook;
 
 class LaravelFacebookSdk extends Facebook
