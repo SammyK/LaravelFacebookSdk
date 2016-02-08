@@ -20,6 +20,8 @@ A fully unit-tested package for easily integrating the [Facebook SDK v5](https:/
 ----
 
 - [Installation](#installation)
+- [User Login From Redirect Example](#user-login-from-redirect-example)
+- [Making Requests To Facebook](#making-requests-to-facebook)
 - [Facebook Login](#facebook-login)
 - [Saving Data From Facebook In The Database](#saving-data-from-facebook-in-the-database)
 - [Logging The User Into Laravel](#logging-the-user-into-laravel)
@@ -138,23 +140,6 @@ FACEBOOK_APP_SECRET=SomeFooAppSecret
 ```
 
 
-### Syncing Graph nodes with Laravel models
-
-If you have a `facebook_user_id` column in your user's table, you can add the `SyncableGraphNodeTrait` to your `User` model to have the user node from the Graph API automatically sync with your model.
-
-```php
-class User extends Eloquent implements UserInterface {
-    use SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
-    
-    protected static $graph_node_field_aliases = [
-        'id' => 'facebook_user_id',
-    ];
-}
-```
-
-More info on [saving data from Facebook in the database](#saving-data-from-facebook-in-the-database).
-
-
 ## User Login From Redirect Example
 
 Here's a full example of how you might log a user into your app using the [redirect method](#login-from-redirect).
@@ -240,6 +225,30 @@ Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFaceb
     return redirect('/')->with('message', 'Successfully logged in with Facebook');
 });
 ```
+
+For more details on the ways to authenticate a user, see [Facebook Login](#facebook-login).
+
+
+## Making Requests To Facebook
+
+Requests to Facebook are made via the [Graph API](https://developers.facebook.com/docs/graph-api). This package is a Laravel wrapper for the official [Facebook PHP SDK v5](https://developers.facebook.com/docs/reference/php) so all the methods available to the official SDK are also available in this package.
+
+### Get User Info
+
+The following snippet will retrieve a [User node](https://developers.facebook.com/docs/graph-api/reference/user/) representing the logged in user.
+
+```php
+try {
+  $response = $fb->get('/me?fields=id,name,email', 'user-access-token');
+} catch(\Facebook\Exceptions\FacebookSDKException $e) {
+  dd($e->getMessage());
+}
+
+$userNode = $response->getGraphUser();
+printf('Hello, %s!', $userNode->getName());
+```
+
+[See more about the `get()` method.](https://developers.facebook.com/docs/php/Facebook/5.0.0#get)
 
 
 ## Facebook Login
