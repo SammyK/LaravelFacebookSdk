@@ -41,7 +41,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
             }
             $config = $app['config']->get('laravel-facebook-sdk.facebook_config');
 
-            if (! isset($config['persistent_data_handler'])) {
+            if (! isset($config['persistent_data_handler']) && isset($app['session.store'])) {
                 $config['persistent_data_handler'] = new LaravelPersistentDataHandler($app['session.store']);
             }
 
