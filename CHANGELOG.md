@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.3.0 - February 9, 2016
+
+- Added support for Lumen and Laravel 5.2.
+
+
 ## 3.2.1 - February 8, 2016
 
 - Updated the config and url type hints to reference interfaces instead of concrete implementations.
