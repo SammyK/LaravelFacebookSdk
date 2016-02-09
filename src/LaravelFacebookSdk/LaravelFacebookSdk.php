@@ -1,7 +1,6 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Routing\UrlGenerator as Url;
 use Facebook\Facebook;
 
 class LaravelFacebookSdk extends Facebook
@@ -12,7 +11,7 @@ class LaravelFacebookSdk extends Facebook
     protected $config_handler;
 
     /**
-     * @var Url
+     * @var \Illuminate\Contracts\Routing\UrlGenerator|\Laravel\Lumen\Routing\UrlGenerator
      */
     protected $url;
 
@@ -23,11 +22,15 @@ class LaravelFacebookSdk extends Facebook
 
     /**
      * @param Config $config_handler
-     * @param Url $url
+     * @param \Illuminate\Contracts\Routing\UrlGenerator|\Laravel\Lumen\Routing\UrlGenerator $url
      * @param array $config
      */
-    public function __construct(Config $config_handler, Url $url, array $config)
+    public function __construct(Config $config_handler, $url, array $config)
     {
+        if (!is_a($url, 'Laravel\Lumen\Routing\UrlGenerator')
+            && !is_a($url, 'Illuminate\Contracts\Routing\UrlGenerator')) {
+            throw new \InvalidArgumentException('Invalid UrlGenerator');
+        }
         $this->config_handler = $config_handler;
         $this->url = $url;
         $this->default_config = $config;
