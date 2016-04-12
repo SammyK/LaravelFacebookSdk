@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.3.1 - April 12, 2016
+
+- Bumped the Graph API version in the config [v2.6](https://developers.facebook.com/docs/apps/changelog).
+
 ## 3.3.0 - February 9, 2016
 
 - Added support for Lumen and Laravel 5.2.
