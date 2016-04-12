@@ -1,3 +1,7 @@
+# USE THE 3.0 BRANCH
+
+This is a deprecated branch that is not being maintained. Please switch to the [3.0](https://github.com/SammyK/LaravelFacebookSdk/tree/3.0) branch which has support for Laravel 5.x & Lumen.
+
 # Laravel Facebook SDK
 
 [![Build Status](https://img.shields.io/travis/SammyK/LaravelFacebookSdk.svg)](https://travis-ci.org/SammyK/LaravelFacebookSdk)
@@ -56,7 +60,7 @@ Add the Laravel Facebook SDK package to your `composer.json` file.
 ```json
 {
     "require": {
-        "sammyk/laravel-facebook-sdk": "~2.0"
+        "sammyk/laravel-facebook-sdk": "~3.0"
     }
 }
 ```
