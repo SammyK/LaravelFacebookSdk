@@ -880,6 +880,16 @@ class VerifyCsrfToken extends BaseVerifier
 }
 ```
 
+#### Getting a QueryException when saving a User
+
+If you're using MySQL, you might get a `QueryException` when saving a user to the database with `createOrUpdateGraphNode()`.
+
+```
+QueryException in Connection.php line 754:
+SQLSTATE[HY000]: General error: 1364 Field 'password' doesn't have a default value
+```
+
+This is because by default, strict mode is enabled which sets [`sql_mode` to include `STRICT_TRANS_TABLES`](https://dev.mysql.com/doc/refman/5.6/en/sql-mode.html). Since we don't need a password for users logging in with Facebook, this field will be empty. A workaround to this error is to set `strict` to `false` for the MySQL diver in your `config/database.php` file.
 
 ## Testing
 
