@@ -6,11 +6,11 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/SammyK/LaravelFacebookSdk/blob/master/LICENSE)
 
 
-A fully unit-tested package for easily integrating the [Facebook SDK v5](https://developers.facebook.com/docs/php/gettingstarted/5.0.0) into Laravel and Lumen 5.0, 5.1, 5.2.
+A fully unit-tested package for easily integrating the [Facebook SDK v5](https://developers.facebook.com/docs/php/gettingstarted/5.0.0) into Laravel and Lumen 5.0, 5.1, 5.2, & 5.3.
 
 ----
 
-**This is package for Laravel and Lumen 5.0, 5.1 & 5.2**
+**This is package for Laravel and Lumen 5.0, 5.1, 5.2, & 5.3**
 
 [![Laravel 5](http://sammyk.s3.amazonaws.com/open-source/laravel-facebook-sdk/laravel-5.png)](http://laravel.com/docs)
 
