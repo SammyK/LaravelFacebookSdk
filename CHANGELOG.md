@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4.0 - August 25, 2016
+
+- Add support for Laravel 5.3
+
 ## 3.3.3 - August 22, 2016
 
 - Updated the Facebook PHP SDK package name from `facebook/php-sdk-v4` to the new name `facebook/graph-sdk`.
