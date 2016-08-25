@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.3.3 - August 22, 2016
+
+- Updated the Facebook PHP SDK package name from `facebook/php-sdk-v4` to the new name `facebook/graph-sdk`.
+
 ## 3.3.2 - August 6, 2016
 
 - Bumped the Graph API version in the config [v2.7](https://developers.facebook.com/docs/apps/changelog).
