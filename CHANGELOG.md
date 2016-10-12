@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4.1 - October 12, 2016
+
+- Bumped the Graph API version in the config to [v2.8](https://developers.facebook.com/docs/apps/changelog).
+
 ## 3.4.0 - August 25, 2016
 
 - Add support for Laravel 5.3
