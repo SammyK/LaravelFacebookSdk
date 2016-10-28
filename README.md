@@ -57,13 +57,7 @@ But if you need any of the following features, you'll want to tie in the Faceboo
 
 Add the Laravel Facebook SDK package to your `composer.json` file.
 
-```json
-{
-    "require": {
-        "sammyk/laravel-facebook-sdk": "^3.0"
-    }
-}
-```
+    composer require sammyk/laravel-facebook-sdk
 
 
 ### Service Provider
