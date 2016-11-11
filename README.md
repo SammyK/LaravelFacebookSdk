@@ -294,7 +294,12 @@ You can get a login URL just like you you do with the Facebook PHP SDK v5.
 Route::get('/facebook/login', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
     $login_link = $fb
             ->getRedirectLoginHelper()
-            ->getLoginUrl('https://exmaple.com/facebook/callback', ['email', 'user_events']);
+            ->getLoginUrl('https://
+            
+            
+            
+            
+            aple.com/facebook/callback', ['email', 'user_events']);
     
     echo '<a href="' . $login_link . '">Log in with Facebook</a>';
 });
@@ -312,7 +317,7 @@ Alternatively you can pass the permissions and a custom callback URL to the wrap
 > **Note:** Since the list of permissions sometimes changes but the callback URL usually stays the same, the permissions array is the first argument in the `getLoginUrl()` wrapper method which is the reverse of the SDK's method `getRedirectLoginHelper()->getLoginUrl($url, $permissions)`.
 
 ```php
-$login_link = $fb->getLoginUrl(['email', 'user_status'], 'https://exmaple.com/facebook/callback');
+$login_link = $fb->getLoginUrl(['email', 'user_status'], 'https://example.com/facebook/callback');
 // Or, if you want to default to the callback URL set in the config
 $login_link = $fb->getLoginUrl(['email', 'user_status']);
 ```
