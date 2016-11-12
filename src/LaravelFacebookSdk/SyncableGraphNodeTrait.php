@@ -120,6 +120,25 @@ trait SyncableGraphNodeTrait
     }
 
     /**
+     * Translates the Graph Node's keys into database columns
+     * 
+     * @param $fields
+     *
+     * @return array
+     */
+    public static function convertGraphFieldsToColumns($fields) {
+        if ($fields instanceof GraphObject || $fields instanceof GraphNode) {
+            $fields = array_dot($fields->asArray());
+        }
+        $columns = [];
+        foreach($fields as $field => $value) {
+            $columns[static::fieldToColumnName($field)] = $value;
+        }
+
+        return $columns;
+    }
+
+    /**
      * Convert instances of \DateTime to string
      *
      * @param array $data
