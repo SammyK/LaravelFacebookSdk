@@ -246,6 +246,9 @@ Here's how you might log a user into your site, get a long-lived access token an
 Route::get('/login', function()
 {
     return Redirect::to(Facebook::getLoginUrl());
+
+    // If your app is working on Facebook canvas you should do like this
+    // echo '<script>top.location="'. Facebook::getLoginUrl() .'";</script>';
 });
 
 // Endpoint that is redirected to after an authentication attempt
@@ -342,7 +345,7 @@ There are three types of exceptions that can be thrown.
 To get the tests to pass, you'll need to run `phpunit` from within the root of your Laravel installation and point it to the LaravelFacebookSdk installation in the `vendor` directory.
 
 ``` bash
-$ cd /path/to/laravel-installation 
+$ cd /path/to/laravel-installation
 $ phpunit vendor/sammyk/laravel-facebook-sdk
 ```
 
