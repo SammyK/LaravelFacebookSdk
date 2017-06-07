@@ -398,10 +398,12 @@ If your app lives within the context of a Facebook app canvas, you can obtain an
 
 > **Note:** The canvas helper only obtains an existing access token from the signed request data received from Facebook. If the user visiting your app has not authorized your app yet or their access token has expired, the `getAccessToken()` method will return `null`. In that case you'll need to log the user in with either [a redirect](#login-from-redirect) or [JavaScript](#login-from-javascript).
 
+> **Note:** Your Secure Canvas URL which you enter in the [Basic Settings of your App Dashboard](https://developers.facebook.com/apps/) must not end with a slash '/'. [See why and how to fix this issue](#canvas-and-page-tab-urls-must-not-end-with-a-slash).
+
 Use the SDK's canvas helper to obtain the access token from the signed request data.
 
 ```php
-Route::match(['get', 'post'], '/facebook/canvas', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+Route::post('/facebook/canvas', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
     try {
         $token = $fb->getCanvasHelper()->getAccessToken();
     } catch (Facebook\Exceptions\FacebookSDKException $e) {
@@ -423,10 +425,12 @@ Route::match(['get', 'post'], '/facebook/canvas', function(SammyK\LaravelFaceboo
 
 If your app lives within the context of a Facebook Page tab, that is the same as an app canvas and the "Login From App Canvas" method will also work to obtain an access token. But a Page tab also has additional data in the signed request.
 
+> **Note:** Your Secure Page Tab URL which you enter in the [Basic Settings of your App Dashboard](https://developers.facebook.com/apps/) must not end with a slash '/'. [See why and how to fix this issue](#canvas-and-page-tab-urls-must-not-end-with-a-slash).
+
 The SDK provides a Page tab helper to obtain an access token from the signed request data within the context of a Page tab.
 
 ```php
-Route::match(['get', 'post'], '/facebook/page-tab', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+Route::post('/facebook/page-tab', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
     try {
         $token = $fb->getPageTabHelper()->getAccessToken();
     } catch (Facebook\Exceptions\FacebookSDKException $e) {
@@ -890,6 +894,14 @@ SQLSTATE[HY000]: General error: 1364 Field 'password' doesn't have a default val
 ```
 
 This is because by default, strict mode is enabled which sets [`sql_mode` to include `STRICT_TRANS_TABLES`](https://dev.mysql.com/doc/refman/5.6/en/sql-mode.html). Since we don't need a password for users logging in with Facebook, this field will be empty. A workaround to this error is to set `strict` to `false` for the MySQL diver in your `config/database.php` file.
+
+#### Canvas and Page Tab URLs must not end with a slash
+
+If your Canvas or Page Tab URL ends with a slash '/' (e.g. https://my.domain/facebook/canvas/) then Laravel performs a 301 redirect to the corresponding URL without the trailing slash (for Apache web server this rule is declared in `public/.htaccess` file), therefore the `POST`'ed `signed_request` param is lost during the redirect which makes impossible for both Canvas and PageTab helpers to obtain an access token from the request.
+
+For Page Tab go to the [Basic Settings of your App Dashboard](https://developers.facebook.com/apps/) and make sure that your `Secure Page Tab URL` field doesn't have a trailing slash (e.g. https://my.domain/facebook/page-tab).
+
+But for Canvas Facebook doesn't allow an URL to finish without a '/' unless it has a '?' in it. Therefore make sure that your `Facebook Web Games URL (https)` field is something like that https://my.domain/facebook/canvas?some-string
 
 ## Testing
 
