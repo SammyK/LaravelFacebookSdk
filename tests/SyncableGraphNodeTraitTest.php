@@ -51,7 +51,7 @@ class MyFillableOnlyFields extends MyUserModel
     protected static $graph_node_fillable_fields = ['facebook_id', 'keep_me'];
 }
 
-class FacebookableTraitTest extends \PHPUnit_Framework_TestCase
+class FacebookableTraitTest extends \PHPUnit\Framework\TestCase
 {
     public function testFieldToColumnNameReturnsFieldNameWhenNoAliasPresent()
     {
