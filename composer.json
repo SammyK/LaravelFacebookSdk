@@ -39,5 +39,15 @@
     },
     "branch-alias": {
         "dev-master": "3.x-dev"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SammyK\\LaravelFacebookSdk\\LaravelFacebookSdkServiceProvider"
+            ],
+            "aliases": {
+                "Facebook": "SammyK\\LaravelFacebookSdk\\FacebookFacade"
+            }
+        }
     }
 }
