@@ -9,7 +9,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = false;
+    protected $defer = true;
 
     /**
      * Bootstrap the application events.
@@ -59,6 +59,18 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
 
             return new LaravelFacebookSdk($app['config'], $app['url'], $config);
         });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            'SammyK\LaravelFacebookSdk\LaravelFacebookSdk',
+        ];
     }
 
     private function isLumen()
