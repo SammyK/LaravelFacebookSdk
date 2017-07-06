@@ -43,6 +43,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
             if ($this->isLumen()) {
                 $app->configure('laravel-facebook-sdk');
             }
+            $this->mergeConfigFrom(__DIR__.'/../config/laravel-facebook-sdk.php', 'laravel-facebook-sdk');
             $config = $app['config']->get('laravel-facebook-sdk.facebook_config');
 
             if (! isset($config['persistent_data_handler']) && isset($app['session.store'])) {
