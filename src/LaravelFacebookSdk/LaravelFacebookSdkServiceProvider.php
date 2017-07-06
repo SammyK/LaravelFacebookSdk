@@ -18,6 +18,10 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
         if ($this->isLumen()) {
             return;
         }
