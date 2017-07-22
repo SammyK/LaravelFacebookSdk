@@ -3,6 +3,7 @@
 ## 3.5.0 - July 22, 2017
 
 - Added support for auto-discovery in Laravel 5.5 (#184)
+- Removed PHP 5.5 (EOL) from tested versions in Travis CI
 - Bumped the Graph API version in the config to [v2.10](https://developers.facebook.com/docs/apps/changelog)
 
 ## 3.4.2 - April 20, 2017
