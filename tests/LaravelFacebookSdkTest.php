@@ -3,7 +3,7 @@
 use Mockery as m;
 use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
 
-class LaravelFacebookSdkTest extends \PHPUnit_Framework_TestCase
+class LaravelFacebookSdkTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Illuminate\Config\Repository|\Mockery\MockInterface
