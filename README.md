@@ -59,6 +59,7 @@ Add the Laravel Facebook SDK package to your `composer.json` file.
 
     composer require sammyk/laravel-facebook-sdk
 
+> **Auto-discovery:** As of version **3.5.0**, the Laravel Facebook SDK supports [auto-discovery](https://medium.com/@taylorotwell/package-auto-discovery-in-laravel-5-5-ea9e3ab20518) for Laravel 5.5 and greater.
 
 ### Service Provider
 
