@@ -360,7 +360,7 @@ By default the JavaScript SDK will not set a cookie, so you have to explicitly e
 FB.init({
   appId      : 'your-app-id',
   cookie     : true,
-  version    : 'v2.9'
+  version    : 'v2.10'
 });
 ```
 
@@ -753,7 +753,7 @@ Route::get('/example', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb
     $fb2 = $fb->newInstance([
       'app_id' => env('FACEBOOK_APP_ID2'),
       'app_secret' => env('FACEBOOK_APP_SECRET2'),
-      'default_graph_version' => 'v2.9',
+      'default_graph_version' => 'v2.10',
       // . . .
     ]);
 });

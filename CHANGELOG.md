@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4.3 - July 22, 2017
+
+- Bumped the Graph API version in the config to [v2.10](https://developers.facebook.com/docs/apps/changelog)
+
 ## 3.4.2 - April 20, 2017
 
 - Bumped the Graph API version in the config to [v2.9](https://developers.facebook.com/docs/apps/changelog).
