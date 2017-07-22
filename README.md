@@ -65,6 +65,21 @@ Add the Laravel Facebook SDK package to your `composer.json` file.
 }
 ```
 
+At this point run composer update, skipping this step and then adding in Service Provider will result in a FatalErrorException within laravel because php artisan clear-compiled command being configured to run before the update process in your composer.json file.
+
+You can avoid this in future by moving the ```"php artisan clear-compiled"``` command from the ```pre-update-cmd``` list to ```post-update-cmd``` list in your composer.json.
+Like so:
+```
+"scripts": {
+    ...
+    "pre-update-cmd": [
+    ],
+    "post-update-cmd": [
+        "php artisan clear-compiled",
+        "php artisan optimize"
+    ]
+},
+```
 
 ### Service Provider
 
