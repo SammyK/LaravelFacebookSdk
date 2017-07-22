@@ -9,7 +9,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-    protected $defer = false;
+    protected $defer = true;
 
     /**
      * Bootstrap the application events.
@@ -18,6 +18,10 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
         if ($this->isLumen()) {
             return;
         }
@@ -34,11 +38,13 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->isLumen()) {
+            $this->app->configure('laravel-facebook-sdk');
+        }
+        $this->mergeConfigFrom(__DIR__.'/../config/laravel-facebook-sdk.php', 'laravel-facebook-sdk');
+
         // Main Service
         $this->app->bind('SammyK\LaravelFacebookSdk\LaravelFacebookSdk', function ($app) {
-            if ($this->isLumen()) {
-                $app->configure('laravel-facebook-sdk');
-            }
             $config = $app['config']->get('laravel-facebook-sdk.facebook_config');
 
             if (! isset($config['persistent_data_handler']) && isset($app['session.store'])) {
@@ -55,6 +61,18 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
 
             return new LaravelFacebookSdk($app['config'], $app['url'], $config);
         });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            'SammyK\LaravelFacebookSdk\LaravelFacebookSdk',
+        ];
     }
 
     private function isLumen()
