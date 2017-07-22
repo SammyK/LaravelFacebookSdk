@@ -124,6 +124,10 @@ Route::get('/facebook/login', function(SammyK\LaravelFacebookSdk\LaravelFacebook
 
 ### Configuration File
 
+> **Note:** As of version **3.4.0**, publishing the config file is optional as long as you set your [required config values](#required-config-values).
+
+> **Also note:** The config file contains a default Graph API version that gets bumped up to the latest stable version periodically which might cause a breaking change when you update this package in a minor or patch version. It is recommended that you still publish the config file and update the Graph API version on your own time to prevent breaking things.
+
 After [creating an app in Facebook](https://developers.facebook.com/apps), you'll need to provide the app ID and secret. In Laravel you can publish the configuration file with `artisan`.
 
 ```bash
