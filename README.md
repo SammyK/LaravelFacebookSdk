@@ -215,7 +215,7 @@ Route::get('/facebook/callback', function(SammyK\LaravelFacebookSdk\LaravelFaceb
 
     $fb->setDefaultAccessToken($token);
 
-    // Save for later
+    // Save in session so that the token is loaded on the next request. Do not change the session variable name.
     Session::put('fb_user_access_token', (string) $token);
 
     // Get basic info on the user from Facebook.

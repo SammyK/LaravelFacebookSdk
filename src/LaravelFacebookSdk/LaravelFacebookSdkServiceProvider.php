@@ -61,6 +61,13 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
 
             return new LaravelFacebookSdk($app['config'], $app['url'], $config);
         });
+        
+        $this->app->resolving('SammyK\LaravelFacebookSdk\LaravelFacebookSdk', function($obj, $app) {
+            /** @var \SammyK\LaravelFacebookSdk\LaravelFacebookSdk $obj */
+            if ($accessToken = session()->get('fb_user_access_token')) {
+                $obj->setDefaultAccessToken($accessToken);
+            }
+        });
     }
 
     /**
