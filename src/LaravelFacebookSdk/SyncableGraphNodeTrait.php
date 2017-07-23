@@ -38,6 +38,24 @@ trait SyncableGraphNodeTrait
      */
     public static function createOrUpdateGraphNode($data)
     {
+        $graph_node = static::convertGraphNodeToModel($data);
+
+        $graph_node->save();
+
+        return $graph_node;
+    }
+
+    /**
+     * Converts Graph node into a Model so that any changes can be done before saving
+     *
+     * @param $data
+     *
+     * @return Model
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function convertGraphNodeToModel($data)
+    {
         // @todo this will be GraphNode soon
         if ($data instanceof GraphObject || $data instanceof GraphNode) {
             $data = array_dot($data->asArray());
@@ -54,8 +72,6 @@ trait SyncableGraphNodeTrait
         $graph_node = static::firstOrNewGraphNode($attributes);
 
         static::mapGraphNodeFieldNamesToDatabaseColumnNames($graph_node, $data);
-
-        $graph_node->save();
 
         return $graph_node;
     }
