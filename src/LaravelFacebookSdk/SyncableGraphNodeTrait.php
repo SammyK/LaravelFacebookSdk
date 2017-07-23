@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Facebook\GraphNodes\GraphObject;
 use Facebook\GraphNodes\GraphNode;
+use Facebook\GraphNodes\GraphEdge;
 
 trait SyncableGraphNodeTrait
 {
@@ -61,6 +62,38 @@ trait SyncableGraphNodeTrait
     }
 
     /**
+     * Inserts or updates the Graph node to the local database
+     *
+     * @param array|GraphObject|GraphNode $data
+     *
+     * @return Model
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function newOrUpdateGraphNode($data)
+    {
+        // @todo this will be GraphNode soon
+        if ($data instanceof GraphObject || $data instanceof GraphNode || $data instanceof GraphEdge) {
+            $data = array_dot($data->asArray());
+        }
+
+        $data = static::convertGraphNodeDateTimesToStrings($data);
+
+        if (! isset($data['id'])) {
+            throw new \InvalidArgumentException('Graph node id is missing');
+        }
+        var_dump($data);
+
+        $attributes = [static::getGraphNodeKeyName() => $data['id']];
+
+        $graph_node = static::firstOrNewGraphNode($attributes);
+
+        static::mapGraphNodeFieldNamesToDatabaseColumnNames($graph_node, $data);
+
+        return $graph_node;
+    }
+
+    /**
      * Like static::firstOrNew() but without mass assignment
      *
      * @param array $attributes
@@ -90,7 +123,6 @@ trait SyncableGraphNodeTrait
             && isset(static::$graph_node_field_aliases[$field])) {
             return static::$graph_node_field_aliases[$field];
         }
-
         return $field;
     }
 
