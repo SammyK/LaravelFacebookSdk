@@ -403,7 +403,7 @@ If your app lives within the context of a Facebook app canvas, you can obtain an
 Use the SDK's canvas helper to obtain the access token from the signed request data.
 
 ```php
-Route::post('/facebook/canvas', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+Route::match(['get', 'post'], '/facebook/canvas', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
     try {
         $token = $fb->getCanvasHelper()->getAccessToken();
     } catch (Facebook\Exceptions\FacebookSDKException $e) {
@@ -430,7 +430,7 @@ If your app lives within the context of a Facebook Page tab, that is the same as
 The SDK provides a Page tab helper to obtain an access token from the signed request data within the context of a Page tab.
 
 ```php
-Route::post('/facebook/page-tab', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+Route::match(['get', 'post'], '/facebook/page-tab', function(SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
     try {
         $token = $fb->getPageTabHelper()->getAccessToken();
     } catch (Facebook\Exceptions\FacebookSDKException $e) {
