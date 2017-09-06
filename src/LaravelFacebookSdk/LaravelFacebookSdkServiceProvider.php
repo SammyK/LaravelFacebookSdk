@@ -26,9 +26,15 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->publishes([
-            __DIR__.'/../config/laravel-facebook-sdk.php' => \config_path('laravel-facebook-sdk.php'),
-        ], 'config');
+        $configPath = realpath(__DIR__ . '/../config/laravel-facebook-sdk.php');
+
+        if ($this->isLumen()) {
+            $this->app->configure('laravel-facebook-sdk');
+        }else{
+            $this->publishes([$configPath => config_path('laravel-facebook-sdk.php')]);
+        }
+
+        $this->mergeConfigFrom($configPath, 'laravel-facebook-sdk');
     }
 
     /**
@@ -38,11 +44,6 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if ($this->isLumen()) {
-            $this->app->configure('laravel-facebook-sdk');
-        }
-        $this->mergeConfigFrom(__DIR__.'/../config/laravel-facebook-sdk.php', 'laravel-facebook-sdk');
-
         // Main Service
         $this->app->bind('SammyK\LaravelFacebookSdk\LaravelFacebookSdk', function ($app) {
             $config = $app['config']->get('laravel-facebook-sdk.facebook_config');
