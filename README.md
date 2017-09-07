@@ -656,7 +656,7 @@ Naturally you'll need to create a column for every other piece of information yo
 
 You can store the access token in the database if you need to make requests on behalf of the user when they are not browsing your app (like a 3AM cron job). But in general you won't need to store the access token in the database.
 
-Also you have to make the `email` field nullable. That's because [email permission](https://developers.facebook.com/docs/facebook-login/permissions/#reference-email) for Facebook apps is optional. It means users may choose not to share it with your app. Also even if you request the email permission it is not guaranteed you will get an email address. For example, if someone signed up for Facebook with a phone number instead of an email address, the email field may be empty.
+Also you have to make the `email` field nullable. That's because [email permission](https://developers.facebook.com/docs/facebook-login/permissions/#reference-email) for Facebook apps is optional. It means users may choose not to share their email address with your app. Also even if you request the email permission it is not guaranteed you will get an email address. For example, if someone signed up for Facebook with a phone number instead of an email address, the email field may be empty.
 
 By default the `email` field is not null and has a unique index on it. It means it can only accept one user with empty email. Starting from the second user you'll get the database error 'Duplicate entry for unique key'. To fix this just make `email` nullable.
 
