@@ -30,7 +30,7 @@ class LaravelFacebookSdkServiceProvider extends ServiceProvider
 
         if ($this->isLumen()) {
             $this->app->configure('laravel-facebook-sdk');
-        }else{
+        } else {
             $this->publishes([$configPath => config_path('laravel-facebook-sdk.php')]);
         }
 
