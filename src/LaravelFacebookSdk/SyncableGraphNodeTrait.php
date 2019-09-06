@@ -1,6 +1,7 @@
 <?php namespace SammyK\LaravelFacebookSdk;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Facebook\GraphNodes\GraphObject;
 use Facebook\GraphNodes\GraphNode;
 
@@ -40,7 +41,7 @@ trait SyncableGraphNodeTrait
     {
         // @todo this will be GraphNode soon
         if ($data instanceof GraphObject || $data instanceof GraphNode) {
-            $data = array_dot($data->asArray());
+            $data = Arr::dot($data->asArray());
         }
 
         $data = static::convertGraphNodeDateTimesToStrings($data);
