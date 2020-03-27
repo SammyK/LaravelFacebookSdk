@@ -14,12 +14,6 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "illuminate/auth": "~5.0|~5.1|~5.2|~5.3",
-        "illuminate/config": "~5.0|~5.1|~5.2|~5.3",
-        "illuminate/database": "~5.0|~5.1|~5.2|~5.3",
-        "illuminate/routing": "~5.0|~5.1|~5.2|~5.3",
-        "illuminate/session": "~5.0|~5.1|~5.2|~5.3",
-        "illuminate/support": "~5.0|~5.1|~5.2|~5.3",
         "facebook/graph-sdk": "^5.0"
     },
     "require-dev": {
